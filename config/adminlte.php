@@ -215,7 +215,7 @@ return [
     */
 
     'sidebar_mini' => 'lg',
-    'sidebar_collapse' => false,
+    'sidebar_collapse' => true,
     'sidebar_collapse_auto_size' => false,
     'sidebar_collapse_remember' => false,
     'sidebar_collapse_remember_no_transition' => true,
@@ -295,14 +295,20 @@ return [
 
     'menu' => [
         [
-            'text' => 'Agenda',
+            'text' => 'Agenda Entrega',
             'icon_color' => 'red',
-            'url' => '#',
+            'url' => '/agendas',
+        ],
+
+        [
+            'text' => 'Agenda Montagem',
+            'icon_color' => 'yellow',
+            'url' => '/agendamontagens',
         ],
         [
             'text' => 'Configuração',
             'icon_color' => 'cyan',
-            'url' => '#',
+            'url' => '/configs',
         ],
     ],
 
