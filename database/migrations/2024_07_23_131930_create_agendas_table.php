@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('agendas', function (Blueprint $table) {
             $table->id();
             $table->date('dt_agenda');
-            $table->time('hr_entrega');
+
             $table->string('numero_pedido')->nullable();
             $table->boolean('entregue')->default(false);
             $table->string('tipo')->default('E');

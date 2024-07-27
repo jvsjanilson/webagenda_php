@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="pt-3 d-flex justify-content-center">
-        <div class="col-6">
+        <div class="col">
             <form action="{{ route('configs.update', $reg->id) }}" method="POST">
                 @csrf
                 @method('PUT')

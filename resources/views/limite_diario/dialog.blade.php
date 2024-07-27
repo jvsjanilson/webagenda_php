@@ -32,7 +32,7 @@
                                         ]
                                     @endphp
                                     @for ($i = 1; $i <= 12; $i++ )
-                                        <option value="{{ $i  }}"> {{ $meses[$i] }}</option>
+                                        <option {{ $i == date('m') ? 'selected' : '' }}  value="{{ $i  }}"> {{ $meses[$i] }}</option>
                                     @endfor
                                 </select>
 
@@ -40,33 +40,30 @@
                         </div>
                         <div class="col-auto form-group">
 
-                                <label for="anos">Anos</label>
-                                <select name="anos" id="anos" class="form-control">
-                                    @php
-                                        $anoAtual = date('Y');
-                                        $anos = [];
+                            <label for="anos">Anos</label>
+                            <select name="anos" id="anos" class="form-control">
+                                @php
+                                    $anoAtual = date('Y');
+                                    $anos = [];
 
-                                        for ($i = $anoAtual - 3; $i < $anoAtual; $i++) {
-                                            $anos[$i] = $i;
-                                        }
+                                    for ($i = $anoAtual - 3; $i < $anoAtual; $i++) {
+                                        $anos[$i] = $i;
+                                    }
 
-                                        for ($i = $anoAtual; $i <= $anoAtual + 3; $i++) {
-                                            $anos[$i] = $i;
-                                        }
+                                    for ($i = $anoAtual; $i <= $anoAtual + 3; $i++) {
+                                        $anos[$i] = $i;
+                                    }
 
+                                @endphp
+                                @foreach ($anos as $a )
+                                    <option {{ $a == date('Y') ? 'selected' : '' }} value="{{ $a  }}"> {{ $a }}</option>
+                                @endforeach
 
-
-                                    @endphp
-                                    @foreach ($anos as $a )
-                                        <option {{ $a == date('Y') ? 'selected' : '' }} value="{{ $a  }}"> {{ $a }}</option>
-                                    @endforeach
-
-                                </select>
-
+                            </select>
 
                         </div>
                         <div class="col-auto d-flex align-items-end form-group">
-                            <button type="button"
+                            <button type="button" id="btn-filtrar"
                                 class="btn active bg-gradient-primary" >
                                 <i class="fa fa-filter"></i> FILTRAR
                             </button>
@@ -85,48 +82,34 @@
                         </div>
 
                         <div class="col-auto form-group">
-                            <label for="tipo_agenda">Dt. Limite</label>
-                            <input type="date" class="form-control" value="{{ date('Y-m-d') }}">
+                            <label for="dt_limite">Dt. Limite</label>
+                            <input id="dt_limite" name="dt_limite" type="date" class="form-control" value="{{ date('Y-m-d') }}">
                         </div>
 
                         <div class="col-auto form-group">
-                            <label for="tipo_agenda">Limite do dia</label>
-                            <input type="number" min="0" class="form-control" value="0">
+                            <label for="limite">Limite do dia</label>
+                            <input id="limite" name="limite" type="number" min="1"  class="form-control" value="1">
                         </div>
 
-
                         <div class="col-auto d-flex align-items-end form-group">
-                            <button type="button" class="btn active bg-gradient-primary"><i class="fas fa-plus"></i> ADICIONAR</button>
+                            <button id="adiciona-limite" onclick="adicionarLimite()" type="button" class="btn active bg-gradient-primary"><i class="fas fa-plus"></i> ADICIONAR</button>
                         </div>
 
                     </div>
                 </form>
 
-                <table class="table table-sm table-bordered table-hover pt-4 table-striped">
+                <table id="limites-diario" class="table table-sm table-bordered table-hover pt-4 table-striped">
                     <thead>
                         <tr>
                             <th class="text-center" style="width: 2rem">Ações</th>
-                            <th>Tipo Agenda</th>
-                            <th>Data Limite</th>
-                            <th>Limite do dia</th>
+                            <th class="text-center">Tipo Agenda</th>
+                            <th class="text-center">Data Limite</th>
+                            <th class="text-center">Limite do dia</th>
 
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td id="1"  class="text-center">
-                                <a href="#" class=""><i class="fas fa-trash text-danger"></i> </a>
-                            </td>
-                            <td>
-                                Entrega
-                            </td>
-                            <td>
-                                26/07/2024
-                            </td>
-                            <td>
-                                1
-                            </td>
-                        </tr>
+
                     </tbody>
                 </table>
 

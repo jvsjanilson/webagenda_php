@@ -18,7 +18,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-row">
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <div class="form-group">
                                 <label for="user_id">Loja</label>
                                 <select name="user_id" id="user_id" class="form-control">
@@ -36,25 +36,33 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="numero_pedido">Núm. Pedido</label>
-                                <input type="number" min="0" class="form-control" id="numero_pedido" name="numero_pedido" >
+                                <input type="number" class="form-control {{ $errors->has('numero_pedido') ? 'is-invalid': ''}}"
+                                    id="numero_pedido" name="numero_pedido" value="{{ old('numero_pedido') }}" >
+                                @error('numero_pedido')
+                                <div class="invalid-feedback">
+                                    <strong>{{ $errors->first('numero_pedido') }}</strong>
+                                </div>
+                                @enderror
                             </div>
+
+
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="dt_agenda">Data</label>
-                                <input type="date" class="form-control" id="dt_agenda" name="dt_agenda"
-                                    value="{{ date('Y-m-d') }}">
+                                <input type="date" class="form-control {{ $errors->has('dt_agenda') ? 'is-invalid': ''}}" id="dt_agenda" name="dt_agenda"
+                                    value="{{ old('dt_agenda') ?? date('Y-m-d') }}">
+
+                                    @if ($errors->has('dt_agenda'))
+                                    <div class="invalid-feedback">
+                                        <strong>{{ $errors->first('dt_agenda') }}</strong>
+                                    </div>
+                                    @endif
                             </div>
                         </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="hr_entrega">Hora</label>
-                                <input type="time" class="form-control" id="hr_entrega" name="hr_entrega"
-                                    value="{{ date('H:i') }}">
-                            </div>
-                        </div>
+
                     </div>
                     <div class="form-row">
 
@@ -109,7 +117,7 @@
             </div>
         </form>
     </div>
-    </div>
+</div>
 
 
 @endsection

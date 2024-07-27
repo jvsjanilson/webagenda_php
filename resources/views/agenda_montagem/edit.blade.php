@@ -1,7 +1,9 @@
 @extends('adminlte::page')
 
 @section('content')
-    <div class="pt-3">
+<div class="pt-3  d-flex justify-content-center">
+    <div class="col-md-9">
+        @include('messages.errors')
         <form action="{{ route('agendamontagens.update', $reg->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -13,7 +15,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-row">
-                        <div class="col-md-4">
+                        <div class="col-md-8">
                             <div class="form-group">
                                 <label for="user_id">Loja</label>
                                 <select name="user_id" id="user_id" class="form-control">
@@ -28,7 +30,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="numero_pedido">Núm. Pedido</label>
                                 <input type="number" min="0" class="form-control" id="numero_pedido"
@@ -44,15 +46,12 @@
                             </div>
                         </div>
 
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <label for="hr_entrega">Hora</label>
-                                <input type="time" class="form-control" id="hr_entrega" name="hr_entrega"
-                                    value="{{ $reg->hr_entrega }}">
-                            </div>
-                        </div>
 
-                        <div class="col-md-1">
+
+
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="ligar_antes">Ligar Antes </label>
                                 <select name="ligar_antes" id="ligar_antes" class="form-control">
@@ -62,7 +61,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="no_minimo">No Mínimo </label>
                                 <select name="no_minimo" id="no_minimo" class="form-control">
@@ -74,7 +73,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="periodo">Período </label>
                                 <select name="periodo" id="periodo" class="form-control">
@@ -83,7 +82,6 @@
                                 </select>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="form-row">
@@ -102,6 +100,7 @@
             </div>
         </form>
     </div>
+</div>
 
 
 @endsection

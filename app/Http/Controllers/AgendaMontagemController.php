@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AgendaFormRequest;
 use Illuminate\Http\Request;
 use App\Models\Agenda;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Config;
 use App\Models\Limite;
-
+use Illuminate\Support\Facades\Auth;
 
 class AgendaMontagemController extends Controller
 {
@@ -27,6 +28,9 @@ class AgendaMontagemController extends Controller
         $q = $request->all();
         $dtInicial = null;
         $dtFim = null;
+        $limiteGeral = Config::first()->limite_montagem;
+
+
         if (count($q) > 0)
         {
             $dtInicial = $q['data_inicial'];
@@ -46,9 +50,7 @@ class AgendaMontagemController extends Controller
             ->where('tipo', 'M')
             ->orderBy('entregue')
             ->orderBy('dt_agenda')
-            ->orderBy('hr_entrega')
             ->get();
-
 
         } else {
 
@@ -57,11 +59,20 @@ class AgendaMontagemController extends Controller
                 ->where('dt_agenda', '>=', Carbon::now()->toDateString())
                 ->where('dt_agenda', '<=', Carbon::now()->toDateString())
                 ->orderBy('entregue')
-                ->orderBy('hr_entrega')
                 ->get();
             }
 
-            return view('agenda_montagem.index', compact('agendas', 'dtInicial', 'dtFim'));
+            $limiteTotal = Limite::where('dt_limite', date('Y-m-d'))
+            ->where('tipo_agenda', 'M')
+            ->count() + $limiteGeral;
+
+            $totalUsado = $this->model
+            ->where('tipo', 'M')
+            ->where('dt_agenda', '=', Carbon::now()->toDateString())
+            ->count();
+
+
+            return view('agenda_montagem.index', compact('agendas', 'dtInicial', 'dtFim', 'limiteTotal', 'totalUsado'));
 
     }
 
@@ -77,8 +88,16 @@ class AgendaMontagemController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(AgendaFormRequest $request)
     {
+        //dd($request->all());
+        // dd($request->validate([
+        //     'dt_agenda' => ['required'],
+        //     'numero_pedido' => ['required']
+        // ]));
+
+
+        
         $data = $request->except('_token');
         $data['tipo'] = 'M';
         $dtAgenda = $data['dt_agenda'];
@@ -93,8 +112,8 @@ class AgendaMontagemController extends Controller
             ->where('tipo', 'M')
             ->count();
 
-        if ($countAgendaMontagemDia > ($limiteMontagem+$limiteDiario) ) {
-            $errors = array("error" => ['Limite de montagem diáriá foi atingido. Entre em contato com o responsável.']);
+        if ($countAgendaMontagemDia >= ($limiteMontagem+$limiteDiario) ) {
+            $errors = array("error" => ['Limite de montagem diária foi atingido. Entre em contato com o responsável.']);
             return redirect()->back()->withErrors($errors)->withInput();
         }
 
@@ -118,6 +137,14 @@ class AgendaMontagemController extends Controller
     {
         $users = User::all();
         $reg = $this->model->find($id);
+
+        if (Auth::user()->superuser == 0) {
+            if ($reg->user_id != Auth::user()->id) {
+                $errors = array("error" => ['Usuário sem permissão']);
+                return redirect()->back()->withErrors($errors)->withInput();
+            }
+        }
+
         return view('agenda_montagem.edit', compact('reg', 'users'));
     }
 
