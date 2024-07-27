@@ -5,6 +5,7 @@ use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\AgendaMontagemController;
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\LimiteController;
+use App\Http\Controllers\HomeController;
 
 
 Route::get('/', function () {
@@ -14,10 +15,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
-Route::resource('/agendas', AgendaController::class);
-Route::resource('/agendamontagens', AgendaMontagemController::class);
-Route::put('/agendamontagens/{id}/done', [AgendaMontagemController::class, 'done'])->name('agendamontagens.done');
-Route::resource('/configs', ConfiguracaoController::class);
+Route::middleware(['auth'])->group(function() {
 
-Route::apiResource('/limites', LimiteController::class);
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::resource('/agendas', AgendaController::class);
+    Route::resource('/agendamontagens', AgendaMontagemController::class);
+    Route::put('/agendamontagens/{id}/done', [AgendaMontagemController::class, 'done'])->name('agendamontagens.done');
+    Route::apiResource('/limites', LimiteController::class);
+    Route::resource('/configs', ConfiguracaoController::class)->middleware('superuser');
+});
