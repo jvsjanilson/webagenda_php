@@ -6,8 +6,8 @@ use App\Http\Requests\AgendaFormRequest;
 use Illuminate\Http\Request;
 use App\Models\Agenda;
 use Carbon\Carbon;
-use App\Models\User;
 use App\Models\Config;
+use App\Models\Empresa;
 use App\Models\Limite;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,7 +29,6 @@ class AgendaMontagemController extends Controller
         $dtInicial = null;
         $dtFim = null;
         $limiteGeral = Config::first()->limite_montagem;
-
 
         if (count($q) > 0)
         {
@@ -54,25 +53,42 @@ class AgendaMontagemController extends Controller
 
         } else {
 
+            $dtInicial = Carbon::now()->toDateString();
+            $dtFim = Carbon::now()->toDateString();
             $agendas = $this->model
                 ->where('tipo', 'M')
-                ->where('dt_agenda', '>=', Carbon::now()->toDateString())
-                ->where('dt_agenda', '<=', Carbon::now()->toDateString())
+                ->where('dt_agenda', '>=', $dtInicial)
+                ->where('dt_agenda', '<=', $dtFim)
                 ->orderBy('entregue')
                 ->get();
-            }
+        }
 
-            $limiteTotal = Limite::where('dt_limite', date('Y-m-d'))
-            ->where('tipo_agenda', 'M')
-            ->count() + $limiteGeral;
+        $diff = Carbon::parse($dtInicial)->diffInDays(Carbon::parse($dtFim));
+        if ($diff >= 1.0) {
+            $limiteGeral += ($diff * Config::first()->limite_montagem);
+        }
 
-            $totalUsado = $this->model
-            ->where('tipo', 'M')
-            ->where('dt_agenda', '=', Carbon::now()->toDateString())
-            ->count();
+        $limiteTotal = Limite::when($dtInicial == $dtFim, function($q) use ($dtFim){
+            $q->where('dt_limite', $dtFim);
+        })
+        ->when($dtInicial != $dtFim, function($q) use ($dtInicial, $dtFim) {
+            $q->whereBetween('dt_limite', [$dtInicial, $dtFim]);
+        })
+        ->where('tipo_agenda', 'M')
+        ->count() + $limiteGeral;
 
 
-            return view('agenda_montagem.index', compact('agendas', 'dtInicial', 'dtFim', 'limiteTotal', 'totalUsado'));
+        $totalUsado = $this->model
+        ->where('tipo', 'M')
+        ->when($dtInicial == $dtFim, function($q) use ($dtFim){
+            $q->where('dt_agenda', $dtFim);
+        })
+        ->when($dtInicial != $dtFim, function($q) use ($dtInicial, $dtFim){
+            $q->whereBetween('dt_agenda', [$dtInicial, $dtFim]);
+        })
+        ->count();
+
+        return view('agenda_montagem.index', compact('agendas', 'dtInicial', 'dtFim', 'limiteTotal', 'totalUsado'));
 
     }
 
@@ -81,8 +97,15 @@ class AgendaMontagemController extends Controller
      */
     public function create()
     {
-        $users = User::all();
-        return view('agenda_montagem.create', compact('users'));
+        $empresas = Empresa::join('user_empresas', 'empresas.id', '=', 'user_empresas.empresa_id')
+        ->join('users', 'user_empresas.user_id', '=', 'users.id')
+        ->when(Auth::user()->superuser == 0, function($q) {
+                 $q->where('user_empresas.user_id', Auth::user()->id);
+            })
+        ->select('empresas.*')
+        ->distinct()
+        ->get();
+        return view('agenda_montagem.create', compact('empresas'));
     }
 
     /**
@@ -128,7 +151,15 @@ class AgendaMontagemController extends Controller
      */
     public function edit(string $id)
     {
-        $users = User::all();
+        $empresas = Empresa::join('user_empresas', 'empresas.id', '=', 'user_empresas.empresa_id')
+        ->join('users', 'user_empresas.user_id', '=', 'users.id')
+        ->when(Auth::user()->superuser == 0, function($q) {
+                 $q->where('user_empresas.user_id', Auth::user()->id);
+            })
+        ->select('empresas.*')
+        ->distinct()
+        ->get();
+
         $reg = $this->model->find($id);
 
         if (Auth::user()->superuser == 0) {
@@ -138,7 +169,7 @@ class AgendaMontagemController extends Controller
             }
         }
 
-        return view('agenda_montagem.edit', compact('reg', 'users'));
+        return view('agenda_montagem.edit', compact('reg', 'empresas'));
     }
 
     /**

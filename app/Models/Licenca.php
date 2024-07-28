@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Licenca extends Model
 {
     use HasFactory;
+    public $guarded = ['id'];
 }
+

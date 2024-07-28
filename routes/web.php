@@ -15,7 +15,7 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false]);
 
-Route::middleware(['auth'])->group(function() {
+Route::middleware(['auth', 'licenca'])->group(function() {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::resource('/agendas', AgendaController::class);
@@ -26,6 +26,14 @@ Route::middleware(['auth'])->group(function() {
 
     Route::apiResource('/limites', LimiteController::class);
     Route::resource('/configs', ConfiguracaoController::class)->middleware('superuser');
+
+
 });
 Route::get('register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->middleware('auth');
 Route::post('register', [App\Http\Controllers\Auth\RegisterController::class, 'register'])->middleware('auth');
+Route::get('/licenca', function() {
+    return view('licenca.index');
+})->name('licenca');
+Route::get('/negado', function() {
+    return view('licenca.acesso_negado');
+})->name('acesso.negado');

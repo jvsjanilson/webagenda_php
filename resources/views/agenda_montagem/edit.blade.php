@@ -18,38 +18,35 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="user_id">Loja</label>
-                                <select name="user_id" id="user_id" class="form-control">
-                                    @if (Auth::user()->superuser == 1)
-                                        @foreach ($users as $u)
-                                            <option {{ $reg->user_id == $u->id ? 'selected' : '' }} value="{{ $u->id }}">{{ $u->name }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="{{ $reg->user_id }}">{{ $reg->user->name }}</option>
-                                    @endif
+                                <select name="empresa_id" id="empresa_id" class="form-control">
+                                    @foreach ($empresas as $e)
+                                    <option {{ (old('empresa_id') ?? $reg->empresa_id) == $e->id ? 'selected' : ''  }} value="{{ $e->id }}">{{ $e->nome }}</option>
+                                    @endforeach
                                 </select>
+
+                                @error('empresa_id')
+                                <div class="invalid-feedback">
+                                    <strong>{{ $errors->first('empresa_id') }}</strong>
+                                </div>
+                                @enderror
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="numero_pedido">Núm. Pedido</label>
-                                <input type="number" min="0" class="form-control" id="numero_pedido"
-                                    name="numero_pedido" value="{{ $reg->numero_pedido }}">
+                                <input type="number" min="0" class="form-control" id="numero_pedido" name="numero_pedido" value="{{ $reg->numero_pedido }}">
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="dt_agenda">Data</label>
-                                <input type="date" class="form-control" id="dt_agenda" name="dt_agenda"
-                                    value="{{ $reg->dt_agenda }}">
+                                <input type="date" class="form-control" id="dt_agenda" name="dt_agenda" value="{{ $reg->dt_agenda }}">
                             </div>
                         </div>
-
-
-
-
                     </div>
+
                     <div class="form-row">
                         <div class="col-md-2">
                             <div class="form-group">
@@ -82,6 +79,16 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="domicilio">Domicílio</label>
+                                <select name="domicilio" id="domicilio" class="form-control">
+                                    <option {{ (old('domicilio') ?? $reg->domicilio) == '0' ? 'selected' : '' }} value="0">CASA</option>
+                                    <option {{ (old('domicilio') ?? $reg->domicilio) == '1' ? 'selected' : '' }} value="1">CONDOMÍNIO</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-row">
@@ -93,14 +100,9 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-
             </div>
         </form>
     </div>
 </div>
-
-
 @endsection

@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "efipay/sdk-php-apis-efi": "^1.9",
         "jeroennoten/laravel-adminlte": "^3.12",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
