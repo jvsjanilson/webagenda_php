@@ -12,10 +12,33 @@ class Agenda extends Model
 
     public $guarded = ['id'];
 
-    public function user()
+    public function empresa()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Empresa::class);
     }
+
+    public function setValorAttribute($value)
+    {
+        $this->attributes['valor'] = ($value != "") ? (float) str_replace(',', '.', str_replace('.', '', $value)) : 0;
+    }
+
+    public function setValorFreteAttribute($value)
+    {
+        $this->attributes['valor_frete'] = ($value != "") ? (float) str_replace(',', '.', str_replace('.', '', $value)) : 0;
+    }
+
+    public function getValorAttribute($value)
+    {
+        return number_format($value, 2, ',', '.');
+    }
+
+
+    public function getValorFreteAttribute($value)
+    {
+        return number_format($value, 2, ',', '.');
+    }
+
+    //  return ($valor != "") ? (float) str_replace(',', '.', str_replace('.', '', $valor)) : 0
 
     // public function getDtAgendaAttribute($value)
     // {

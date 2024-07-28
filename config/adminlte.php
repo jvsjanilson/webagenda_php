@@ -417,6 +417,17 @@ return [
                 ],
             ],
         ],
+        'maskMoney' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'js/jquery.maskMoney.min.js',
+                ]
+            ]
+        ],
+
         'agenda' => [
             'active' => true,
             'files' => [

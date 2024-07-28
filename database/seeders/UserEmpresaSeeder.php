@@ -1,0 +1,25 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class UserEmpresaSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        DB::table('user_empresas')->insert([
+            ['empresa_id' => 1, 'user_id' => 1], //destak
+            ['empresa_id' => 1, 'user_id' => 2], //destak
+            ['empresa_id' => 2, 'user_id' => 3], //ziglar
+            ['empresa_id' => 3, 'user_id' => 4], //sono e conforto
+            ['empresa_id' => 4, 'user_id' => 5], //sono prime
+
+        ]);
+    }
+}

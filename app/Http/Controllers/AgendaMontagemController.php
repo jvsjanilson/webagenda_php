@@ -90,14 +90,7 @@ class AgendaMontagemController extends Controller
      */
     public function store(AgendaFormRequest $request)
     {
-        //dd($request->all());
-        // dd($request->validate([
-        //     'dt_agenda' => ['required'],
-        //     'numero_pedido' => ['required']
-        // ]));
 
-
-        
         $data = $request->except('_token');
         $data['tipo'] = 'M';
         $dtAgenda = $data['dt_agenda'];

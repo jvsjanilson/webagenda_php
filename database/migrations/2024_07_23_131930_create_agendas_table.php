@@ -19,11 +19,11 @@ return new class extends Migration
             $table->boolean('entregue')->default(false);
             $table->string('tipo')->default('E');
             $table->text('obs')->nullable();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('empresa_id')->constrained();
             $table->boolean('ligar_antes')->default(false); //sim, nao
             $table->smallInteger('no_minimo')->default(0); //15min, 30min, 1h, 2h
-            $table->smallInteger('periodo')->default(false);// manha, tarde
-
+            $table->smallInteger('periodo')->default(0);// 0-manha, 1-tarde
+            $table->smallInteger('domicilio')->default(0);// 0-casa, 1-condominio
             $table->boolean('pagamento_entrega')->default(false); //sim, nao
             $table->smallInteger('pagamento')->default(0); //credito, debito, dinheiro, pix, link
             $table->decimal('valor', 15,2)->default(0);//valor pagamento se pagamento_entrega=sim

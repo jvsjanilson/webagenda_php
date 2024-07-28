@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\SuperUserMiddleware;
+use App\Http\Middleware\RedirectIfAuthenticatedCustom;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,9 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->remove('guest');
+
         $middleware->alias([
-            'superuser' => SuperUserMiddleware::class
+            'superuser' => SuperUserMiddleware::class,
+            'guest' => RedirectIfAuthenticatedCustom::class
         ]);
+
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
