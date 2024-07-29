@@ -6,6 +6,7 @@ use App\Http\Controllers\AgendaMontagemController;
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\LimiteController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PagamentoController;
 
 
 Route::get('/', function () {
@@ -26,14 +27,17 @@ Route::middleware(['auth', 'licenca'])->group(function() {
 
     Route::apiResource('/limites', LimiteController::class);
     Route::resource('/configs', ConfiguracaoController::class)->middleware('superuser');
-
-
 });
+
 Route::get('register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->middleware('auth');
 Route::post('register', [App\Http\Controllers\Auth\RegisterController::class, 'register'])->middleware('auth');
-Route::get('/licenca', function() {
-    return view('licenca.index');
-})->name('licenca');
+
 Route::get('/negado', function() {
     return view('licenca.acesso_negado');
 })->name('acesso.negado');
+
+Route::get('/pagamentos', [PagamentoController::class, 'index'])->name('pagamentos.index')->middleware('auth');
+Route::post('/pagamentos', [PagamentoController::class, 'store'])->name('pagamentos.store')->middleware('auth');
+Route::get('/pagamentos/{documento}/status', [PagamentoController::class, 'status'])->name('pagamentos.status')->middleware('auth');
+Route::get('/pagamentos/create', [PagamentoController::class, 'create'])->name('pagamentos.create')->middleware('auth');
+

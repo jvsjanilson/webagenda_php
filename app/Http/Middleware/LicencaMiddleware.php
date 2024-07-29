@@ -6,6 +6,8 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Licenca;
+use App\Models\Pagamento;
+use App\Utils\Util;
 
 class LicencaMiddleware
 {
@@ -21,15 +23,18 @@ class LicencaMiddleware
             $licenca = Licenca::orderBy('validade', 'desc')->first();
 
             if (!isset($licenca)){
+                $this->checarPagamento();
                 if (auth()->user()->superuser == 1) {
-                    return redirect('/licenca');
+                    return redirect()->route('pagamentos.index');
                 } else {
                     return redirect('/negado');
                 }
+
             } else {
                 if ($today > $licenca->validade) {
+                    $this->checarPagamento();
                     if (auth()->user()->superuser == 1) {
-                        return redirect('/licenca');
+                        return redirect()->route('pagamentos.index');
                     } else {
                         return redirect('/negado');
                     }
@@ -39,5 +44,23 @@ class LicencaMiddleware
         }
 
         return $next($request);
+    }
+
+    /**
+     * Chega se tem algum pagamento em aberto, caso nao tenho
+     * cria um
+     *
+     * @return void
+     */
+    private function checarPagamento()
+    {
+        $pagamento = Pagamento::whereIn('status', ['ABERTO', 'ATIVA'])->get();
+        if (count($pagamento) == 0) {
+            Pagamento::create([
+                'valor' => Util::$mensalidade,
+                'status' => 'ABERTO'
+            ]);
+        }
+
     }
 }

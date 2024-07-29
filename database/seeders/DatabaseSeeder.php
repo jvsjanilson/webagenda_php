@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Licenca;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,7 +16,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             UserEmpresaSeeder::class,
             ConfigSeeder::class,
-            Licenca::class,
+            LicencaSeed::class,
         ]);
     }
 }

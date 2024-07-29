@@ -45,11 +45,11 @@ function adicionarLimite()
         },
         beforeSend: () => {
             $("#adiciona-limite").attr('disabled', true);
-            Swal.fire({title: 'Aguarde...',  text: 'Adicionando', icon: 'info', showConfirmButton: false})
+           // Swal.fire({title: 'Aguarde...',  text: 'Adicionando', icon: 'info', showConfirmButton: false})
         },
         complete: () => {
             $("#adiciona-limite").attr('disabled', false);
-            Swal.close();
+           // Swal.close();
         }
     }).fail((error) => {
         Swal.fire('Error!', error.responseJSON.error, 'error')
@@ -74,8 +74,8 @@ function deleteLimite(id) {
                 success: (res) => {
                     $(`#limites-diario tbody tr[id=${id}]`).remove();
                 },
-                beforeSend: () =>  Swal.fire({title: 'Aguarde...',  text: 'Removendo...', icon: 'info', showConfirmButton: false}),
-                complete: () => Swal.close()
+                // beforeSend: () =>  Swal.fire({title: 'Aguarde...',  text: 'Removendo...', icon: 'info', showConfirmButton: false}),
+                // complete: () => Swal.close()
 
             }).fail((e) => {
                 Swal.fire('Error!', error.responseJSON.message, 'error')
@@ -110,13 +110,13 @@ function loadLimites() {
             $("#limites-diario tbody tr").remove();
             $("#btn-limite-diario").attr('disabled', true);
             $("#btn-filtrar").attr('disabled', true);
-            Swal.fire({title: 'Aguarde...',  text: 'Carregando', icon: 'info', showConfirmButton: false})
+          //  Swal.fire({title: 'Aguarde...',  text: 'Carregando', icon: 'info', showConfirmButton: false})
         },
         complete: () => {
             $('#modal-limite-diario').show();
             $("#btn-limite-diario").attr('disabled', false);
             $("#btn-filtrar").attr('disabled', false);
-            Swal.close()
+          //  Swal.close()
         }
     })
 }
