@@ -1,5 +1,9 @@
 @extends('adminlte::page')
 
+@section('title')
+Agenda Montagem
+@endsection
+
 @section('content_header')
 <div class="card card-primary card-outline mb-0">
     <div class="card-header">

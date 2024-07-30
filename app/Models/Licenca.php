@@ -11,12 +11,12 @@ class Licenca extends Model
     use HasFactory;
     public $guarded = ['id'];
 
-    // protected $appends = ['ativo'];
+    protected $appends = ['ativo'];
 
-    // public function getAtivoAttribute($value)
-    // {
-    //     return $this->validade >= Carbon::now()->format('Y-m-d');
-    // }
+    public function getAtivoAttribute($value)
+    {
+        return $this->validade >= Carbon::now()->format('Y-m-d');
+    }
 
 }
 

@@ -1,5 +1,9 @@
 @extends('adminlte::page')
 
+@section('title')
+Agenda Montagem
+@endsection
+
 @section('content')
 
 <div class="pt-3  d-flex justify-content-center">
