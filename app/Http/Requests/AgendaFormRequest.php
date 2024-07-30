@@ -23,7 +23,7 @@ class AgendaFormRequest extends FormRequest
     {
         return [
             'dt_agenda' => ['required'],
-            'numero_pedido' => ['required']
+            'numero_pedido' => ['required', 'max:50'],
         ];
     }
 
@@ -31,7 +31,7 @@ class AgendaFormRequest extends FormRequest
     {
         return [
             'dt_agenda' => 'Data',
-            'numero_pedido' => 'Núm. Pedido'
+            'numero_pedido' => 'Núm. Pedido / Nome do cliente'
         ];
     }
 }

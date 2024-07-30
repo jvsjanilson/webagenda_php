@@ -134,9 +134,9 @@ Agenda Entrega
                             <div class="direct-chat-infos clearfix">
                                 <span class="direct-chat-name float-left">PERÍODO:</span>
                                 <span class="direct-chat-timestamp float-right">
-                                    <span><i class="{{ $a->periodo == 1 ? 'fa fa-check-square text-success' : 'far fa-square' }} "></i> PELA MANHÃ </span>
+                                    <span><i class="{{ $a->periodo == 0 ? 'fa fa-check-square text-success' : 'far fa-square' }} "></i> SEM PERÍODO </span>
+                                    <span class="ml-1"><i class="{{ $a->periodo == 1 ? 'fa fa-check-square text-success' : 'far fa-square' }} "></i> PELA MANHÃ </span>
                                     <span class="ml-1"><i class="{{ $a->periodo == 2 ? 'fa fa-check-square text-success' : 'far fa-square' }}"></i> A TARDE </span>
-
                                 </span>
                             </div>
                         </div>

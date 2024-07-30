@@ -22,7 +22,7 @@ class AgendaEntregaFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'numero_pedido' => 'required',
+            'numero_pedido' => ['required', 'max:50'],
             'dt_agenda' => 'required',
             'valor' => [function($attribute, $value, $fail){
                 $valor = (float) str_replace(',', '.', str_replace('.', '', ($value ?? '0,00')));
@@ -47,11 +47,11 @@ class AgendaEntregaFormRequest extends FormRequest
     public function attributes()
     {
         return [
-            'numero_pedido' => 'Núm. Pedido',
+            'numero_pedido' => 'Núm. Pedido / Nome do cliente',
             'dt_agenda' => 'Data',
             'valor' => 'Valor',
             'valor_frete' => 'Valor Frete',
-            'pagamento' => 'Forma de Pagto',
+            'pagamento' => 'Pagamento na entrega',
             'empresa_id' => 'Loja'
         ];
     }

@@ -23,7 +23,7 @@ Agenda Entrega
                 </div>
                 <div class="card-body">
                     <div class="form-row">
-                        <div class="col-md-8">
+                        <div class="col-md-10">
                             <div class="form-group">
                                 <label for="empresa_id">Loja</label>
                                 <select name="empresa_id" id="empresa_id" class="form-control">
@@ -42,20 +42,6 @@ Agenda Entrega
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="numero_pedido">Núm. Pedido</label>
-                                <input type="number" class="form-control {{ $errors->has('numero_pedido') ? 'is-invalid': ''}}" id="numero_pedido" name="numero_pedido" value="{{ old('numero_pedido') ?? $reg->numero_pedido  }}">
-                                @error('numero_pedido')
-                                <div class="invalid-feedback">
-                                    <strong>{{ $errors->first('numero_pedido') }}</strong>
-                                </div>
-                                @enderror
-                            </div>
-
-
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
                                 <label for="dt_agenda">Data</label>
                                 <input type="date" class="form-control {{ $errors->has('dt_agenda') ? 'is-invalid': ''}}" id="dt_agenda" name="dt_agenda" value="{{ old('dt_agenda') ?? $reg->dt_agenda }}">
 
@@ -67,7 +53,20 @@ Agenda Entrega
                             </div>
                         </div>
 
+                    </div>
 
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="numero_pedido">Núm. Pedido / Nome do cliente</label>
+                                <input type="text" class="form-control {{ $errors->has('numero_pedido') ? 'is-invalid': ''}}" id="numero_pedido" name="numero_pedido" value="{{ old('numero_pedido') ?? $reg->numero_pedido  }}">
+                                @error('numero_pedido')
+                                <div class="invalid-feedback">
+                                    <strong>{{ $errors->first('numero_pedido') }}</strong>
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                     <div class="form-row">
 
@@ -97,6 +96,7 @@ Agenda Entrega
                             <div class="form-group">
                                 <label for="periodo">Período </label>
                                 <select name="periodo" id="periodo" class="form-control">
+                                    <option {{ (old('periodo') ?? $reg->periodo) == '0' ? 'selected' : '' }} value="0">SEM PERÍODO</option>
                                     <option {{ (old('periodo') ?? $reg->periodo) == '1' ? 'selected' : '' }} value="1">PELA MANHÃ</option>
                                     <option {{ (old('periodo') ?? $reg->periodo) == '2' ? 'selected' : '' }} value="2">A TARDE</option>
                                 </select>
@@ -105,7 +105,7 @@ Agenda Entrega
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="pagamento">Forma Pagto</label>
+                                <label for="pagamento">Pagamento na Entrega</label>
                                 <select name="pagamento" id="pagamento" class="form-control">
                                     <option {{ (old('pagamento') ?? $reg->pagamento) == '0' ? 'selected' : '' }} value="0">0 - SEM PAGAMENTO</option>
                                     <option {{ (old('pagamento') ?? $reg->pagamento) == '1' ? 'selected' : '' }} value="1">1 - DINHEIRO</option>
