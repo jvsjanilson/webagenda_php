@@ -30,7 +30,7 @@ class AgendaMontagemController extends Controller
         $dtFim = null;
         $limiteGeral = Config::first()->limite_montagem;
 
-        if (count($q) > 0)
+        if (count($q) > 0 && !is_null($q['data_inicial']) && !is_null($q['data_fim']))
         {
             $dtInicial = $q['data_inicial'];
             $dtFim = $q['data_fim'];
@@ -134,7 +134,7 @@ class AgendaMontagemController extends Controller
         }
 
         $this->model->create($data);
-        return  redirect()->route('agendamontagens.index');
+        return  redirect()->route('agendamontagens.index', ['data_inicial' =>  $dtAgenda, 'data_fim'=>  $dtAgenda]);
 
     }
 
@@ -178,9 +178,10 @@ class AgendaMontagemController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->except('_token');
+        $dtAgenda = $data['dt_agenda'];
         $reg = $this->model->find($id);
         $reg->update($data);
-        return redirect()->route('agendamontagens.index');
+        return redirect()->route('agendamontagens.index', ['data_inicial' =>  $dtAgenda, 'data_fim'=>  $dtAgenda]);
     }
 
     /**

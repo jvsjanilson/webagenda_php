@@ -28,12 +28,12 @@ class AgendaController extends Controller
     public function index(Request $request)
     {
         $q = $request->all();
+
         $dtInicial = null;
         $dtFim = null;
         $limiteGeral = Config::first()->limite_entrega;
 
-
-        if (count($q) > 0)
+        if (count($q) > 0 && !is_null($q['data_inicial']) && !is_null($q['data_fim']))
         {
             $dtInicial = $q['data_inicial'];
             $dtFim = $q['data_fim'];
@@ -55,6 +55,7 @@ class AgendaController extends Controller
             ->get();
 
         } else {
+
 
             $dtInicial = Carbon::now()->toDateString();
             $dtFim = Carbon::now()->toDateString();
@@ -140,7 +141,7 @@ class AgendaController extends Controller
         }
 
         $this->model->create($data);
-        return  redirect()->route('agendas.index');
+        return  redirect()->route('agendas.index', ['data_inicial' =>  $dtAgenda, 'data_fim'=>  $dtAgenda]);
     }
 
     /**
@@ -184,9 +185,10 @@ class AgendaController extends Controller
     public function update(AgendaEntregaFormRequest $request, string $id)
     {
         $data = $request->except('_token');
+        $dtAgenda = $data['dt_agenda'];
         $reg = $this->model->find($id);
         $reg->update($data);
-        return redirect()->route('agendas.index');
+        return redirect()->route('agendas.index', ['data_inicial' =>  $dtAgenda, 'data_fim'=>  $dtAgenda]);
     }
 
   /**
