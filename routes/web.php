@@ -16,7 +16,7 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false]);
 
-Route::middleware(['auth', 'licenca'])->group(function() {
+Route::middleware(['auth', 'licenca', 'montador'])->group(function() {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::resource('/agendas', AgendaController::class);

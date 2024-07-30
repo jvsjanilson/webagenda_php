@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\SuperUserMiddleware;
 use App\Http\Middleware\RedirectIfAuthenticatedCustom;
 use App\Http\Middleware\LicencaMiddleware;
+use App\Http\Middleware\MontadorMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -19,7 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'superuser' => SuperUserMiddleware::class,
             'guest' => RedirectIfAuthenticatedCustom::class,
-            'licenca' => LicencaMiddleware::class
+            'licenca' => LicencaMiddleware::class,
+            'montador' => MontadorMiddleware::class,
         ]);
 
 
