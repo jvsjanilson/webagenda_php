@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AgendaFormRequest;
 use Illuminate\Http\Request;
 use App\Models\Agenda;
+use App\Models\AgendaFoto;
 use Carbon\Carbon;
 use App\Models\Config;
 use App\Models\Empresa;
@@ -206,12 +207,68 @@ class AgendaMontagemController extends Controller
      * @param string $id
      * @return void
      */
-    public function done(string $id)
+    // public function done(string $id)
+    // {
+    //     $reg = $this->model->find($id);
+    //     $reg->entregue = 1;
+    //     $reg->save();
+    //     return redirect()->route('agendamontagens.index');
+
+    // }
+    public function entregue(string $id)
     {
         $reg = $this->model->find($id);
-        $reg->entregue = 1;
-        $reg->save();
-        return redirect()->route('agendamontagens.index');
+        return view('agenda_montagem.entrega', compact('reg'));
+    }
 
+    public function done(Request $request, string $id)
+    {
+        $agenda = $this->model->find($id);
+
+
+        // $request->validate([
+        //     'fotos' => 'required|image|mimes:jpeg,png,jpg|max:2048|array'
+        // ],
+        // [
+        //     'fotos.required' => 'Informe pelo menos uma foto',
+        // ]);
+
+        if ( count($request->only('fotos')) > 0) {
+
+            $inc = 0;
+            foreach ($request->file('fotos') as $foto)
+            {
+
+                $path = $foto->getClientOriginalName();
+                $ext = $foto->extension();
+
+                $imageName = md5($path . strtotime("now")) . '.'. $ext;
+
+
+                $path = $foto->storeAs('fotos', $imageName);
+
+
+                AgendaFoto::create([
+                    'agenda_id' => $agenda->id,
+                    'foto_path' => $imageName
+                ]);
+                
+                $inc++;
+            }
+            if ($inc > 0) {
+
+                $agenda->entregue = true;
+                $agenda->save();
+            }
+            return redirect()->route('agendamontagens.index', ['data_inicial' =>  $agenda->dt_agenda, 'data_fim'=>  $agenda->dt_agenda]);
+        }
+    }
+
+    public function images(string $id)
+    {
+        $images = AgendaFoto::where('agenda_id', $id)->get();
+       // dd($images);
+
+        return view('agenda_montagem.fotos', compact('images'));
     }
 }

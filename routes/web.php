@@ -23,7 +23,9 @@ Route::middleware(['auth', 'licenca'])->group(function() {
     Route::put('/agendas/{id}/done', [AgendaController::class, 'done'])->name('agendas.done');
 
     Route::resource('/agendamontagens', AgendaMontagemController::class);
-    Route::put('/agendamontagens/{id}/done', [AgendaMontagemController::class, 'done'])->name('agendamontagens.done');
+    Route::post('/agendamontagens/{id}/done', [AgendaMontagemController::class, 'done'])->name('agendamontagens.done');
+    Route::get('/agendamontagens/{id}/entregue', [AgendaMontagemController::class, 'entregue'])->name('agendamontagens.entregue');
+    Route::get('/agendamontagens/{id}/images', [AgendaMontagemController::class, 'images'])->name('agendamontagens.images');
 
     Route::apiResource('/limites', LimiteController::class);
     Route::resource('/configs', ConfiguracaoController::class)->middleware('superuser');
