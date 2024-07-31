@@ -226,12 +226,12 @@ class AgendaMontagemController extends Controller
         $agenda = $this->model->find($id);
 
 
-        $request->validate([
-            'fotos' => ['required', 'max:1024']
-        ],
-        [
-            'fotos.required' => 'Informe pelo menos uma foto',
-        ]);
+        // $request->validate([
+        //     'fotos' => ['required', 'max:1024']
+        // ],
+        // [
+        //     'fotos.required' => 'Informe pelo menos uma foto',
+        // ]);
 
         if ( count($request->only('fotos')) > 0) {
 
@@ -260,6 +260,10 @@ class AgendaMontagemController extends Controller
                 $agenda->entregue = true;
                 $agenda->save();
             }
+            return redirect()->route('agendamontagens.index', ['data_inicial' =>  $agenda->dt_agenda, 'data_fim'=>  $agenda->dt_agenda]);
+        } else {
+            $agenda->entregue = true;
+            $agenda->save();
             return redirect()->route('agendamontagens.index', ['data_inicial' =>  $agenda->dt_agenda, 'data_fim'=>  $agenda->dt_agenda]);
         }
     }
