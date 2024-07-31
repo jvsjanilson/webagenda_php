@@ -28,7 +28,7 @@ Agenda Montagem (Fotos)
                                 @foreach ($images as $i)
                                     <div class="col-md-4">
                                         <div class="photo-card mb-2">
-                                            <img src="{{ Storage::url('fotos') . '/' .$i->foto_path }}" class="img-fluid" alt="Image">
+                                            <img src="{{ Storage::url('app/public/fotos') . '/' .$i->foto_path }}" class="img-fluid" alt="Image">
                                         </div>
                                     </div>
 
