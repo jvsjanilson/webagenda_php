@@ -80,7 +80,7 @@ Agenda Monagem
 
                 <div class="card-footer d-inline">
                     <div class="form-row col-12 d-flex">
-                        <button class="btn active bg-gradient-info mr-2" onclick="" title="Concluir" type="submit"><i class="fas fa-check"></i> Concluir</button>
+                        <button class="btn active bg-gradient-info mr-2" onclick="" title="Concluir" formnovalidate type="submit"><i class="fas fa-check"></i> Concluir</button>
                         <a class="btn active bg-gradient-secondary" href="{{ route('agendamontagens.index') }}"><i class="fas fa-arrow-left"></i> Voltar </a>
                     </div>
                 </div>
