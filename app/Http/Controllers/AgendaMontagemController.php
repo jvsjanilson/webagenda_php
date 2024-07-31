@@ -11,6 +11,7 @@ use App\Models\Config;
 use App\Models\Empresa;
 use App\Models\Limite;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AgendaMontagemController extends Controller
 {
@@ -236,25 +237,39 @@ class AgendaMontagemController extends Controller
         if ( count($request->only('fotos')) > 0) {
 
             $inc = 0;
+
             foreach ($request->file('fotos') as $foto)
             {
 
-                $path = $foto->getClientOriginalName();
-                $ext = $foto->extension();
-
-                $imageName = md5($path . strtotime("now")) . '.'. $ext;
-
-
-                $path = $foto->storeAs('fotos', $imageName);
-
+                $path = $foto->store('photos', 's3');
+                Storage::disk('s3')->setVisibility($path, 'public');
 
                 AgendaFoto::create([
                     'agenda_id' => $agenda->id,
-                    'foto_path' => $imageName
+                    'foto_path' => $path
                 ]);
 
                 $inc++;
             }
+            // foreach ($request->file('fotos') as $foto)
+            // {
+
+            //     $path = $foto->getClientOriginalName();
+            //     $ext = $foto->extension();
+
+            //     $imageName = md5($path . strtotime("now")) . '.'. $ext;
+
+
+            //     $path = $foto->storeAs('fotos', $imageName);
+
+
+            //     AgendaFoto::create([
+            //         'agenda_id' => $agenda->id,
+            //         'foto_path' => $imageName
+            //     ]);
+
+            //     $inc++;
+            // }
             if ($inc > 0) {
 
                 $agenda->entregue = true;
