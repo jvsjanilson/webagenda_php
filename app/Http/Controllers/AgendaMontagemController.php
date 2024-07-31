@@ -227,7 +227,7 @@ class AgendaMontagemController extends Controller
 
 
         $request->validate([
-            'fotos' => ['required']
+            'fotos' => ['required', 'max:1024']
         ],
         [
             'fotos.required' => 'Informe pelo menos uma foto',

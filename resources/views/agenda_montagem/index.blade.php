@@ -171,6 +171,19 @@ Agenda Montagem
                             </div>
                         </div>
 
+                        @if ($a->entregue == 1)
+
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-left">MONTADOR:</span>
+                                <span class="direct-chat-timestamp float-right">
+                                    <span> <strong>{{ Str::upper($a->user->name)  }} </strong> </span>
+
+                                </span>
+                            </div>
+                        </div>
+                        @endif
+
                         @if ($a->obs != '')
                         <div class="direct-chat-msg">
                             <div class="direct-chat-infos clearfix">

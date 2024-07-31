@@ -17,7 +17,7 @@ class MontadorSeeder extends Seeder
             [
                 'name' => 'Janilson',
                 'email'=> 'janilsonjvs@gmail.com',
-                'password' => bcrypt('@jvs123!'),
+                'password' => bcrypt('Ci5458om!'),
                 'superuser' => 0,
                 'montador' => 1
             ], //destak

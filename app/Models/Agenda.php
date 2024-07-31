@@ -17,6 +17,11 @@ class Agenda extends Model
         return $this->belongsTo(Empresa::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function setValorAttribute($value)
     {
         $this->attributes['valor'] = ($value != "") ? (float) str_replace(',', '.', str_replace('.', '', $value)) : 0;
