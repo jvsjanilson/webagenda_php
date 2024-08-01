@@ -207,19 +207,18 @@ Agenda Entrega
                     </div>
                 </div>
 
-                @if ((Auth::user()->superuser == 1 || Auth::user()->empresas->contains('user_id', $a->user_id)) && $a->entregue == 0 )
+
+                @if ((Auth::user()->superuser == 1 || Auth::user()->empresas->contains(App\Models\UserEmpresa::where('user_id', Auth::user()->id)->where('empresa_id', $a->empresa_id)->first() ) ) && $a->entregue == 0 )
                 <div class="card-footer d-inline">
                     <div class="form-row col-12 d-flex">
 
-                        @if (Auth::user()->superuser == 1  || Auth::user()->empresas->contains('user_id', $a->user_id) )
-                            <a class="btn active bg-gradient-primary mr-2" title="Editar" href="{{ route('agendas.edit', $a->id) }}"><i class="fas fa-pencil-alt"></i></a>
+                        <a class="btn active bg-gradient-primary mr-2" title="Editar" href="{{ route('agendas.edit', $a->id) }}"><i class="fas fa-pencil-alt"></i></a>
 
-                            <form action="{{ route('agendas.destroy', $a->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn active bg-gradient-danger mr-2" onclick="if (!confirm('Deseja realmente remover?')) { event.preventDefault(); }" title="Remover" type="submit"><i class="fas fa-trash"></i></button>
-                            </form>
-                        @endif
+                        <form action="{{ route('agendas.destroy', $a->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn active bg-gradient-danger mr-2" onclick="if (!confirm('Deseja realmente remover?')) { event.preventDefault(); }" title="Remover" type="submit"><i class="fas fa-trash"></i></button>
+                        </form>
 
                         @if (Auth::user()->superuser == 1 )
                             <form action="{{ route('agendas.done', $a->id) }}" method="POST">

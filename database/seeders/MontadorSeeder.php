@@ -15,9 +15,9 @@ class MontadorSeeder extends Seeder
     {
         $montador = DB::table('users')->insertGetId(
             [
-                'name' => 'Janilson',
-                'email'=> 'janilsonjvs@gmail.com',
-                'password' => bcrypt('Ci5458om!'),
+                'name' => 'Montador',
+                'email'=> 'destakmagazinemontagem@gmail.com',
+                'password' => bcrypt('@montador123'),
                 'superuser' => 0,
                 'montador' => 1
             ], //destak
@@ -25,9 +25,9 @@ class MontadorSeeder extends Seeder
 
         DB::table('user_empresas')->insert([
             ['empresa_id' => 1, 'user_id' => $montador], //destak
-            // ['empresa_id' => 2, 'user_id' => 3], //ziglar
-            // ['empresa_id' => 3, 'user_id' => 4], //sono e conforto
-            // ['empresa_id' => 4, 'user_id' => 5], //sono prime
+            ['empresa_id' => 2, 'user_id' => $montador], //ziglar
+            ['empresa_id' => 3, 'user_id' => $montador], //sono e conforto
+            ['empresa_id' => 4, 'user_id' => $montador], //sono prime
 
         ]);
 

@@ -11,7 +11,7 @@ class AgendaFormRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->check();
     }
 
     /**
@@ -24,6 +24,15 @@ class AgendaFormRequest extends FormRequest
         return [
             'dt_agenda' => ['required'],
             'numero_pedido' => ['required', 'max:50'],
+            'no_minimo' => [function($attribute, $value, $fail){
+                if ((int)$value == 0 && (int)$this->request->get('ligar_antes') == 1) {
+                    $fail('O :attribute deve ser informado!');
+                }
+                if ((int)$value > 0 && (int)$this->request->get('ligar_antes') == 0) {
+                    $fail('Escolha a opção SEM HORÁRIO MÍNIMO');
+                }
+
+            }],
         ];
     }
 

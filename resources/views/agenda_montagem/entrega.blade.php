@@ -122,7 +122,7 @@ Agenda Monagem
             }
             $('#btn-submit').attr('disabled', true)
             message.textContent = '';
-            Swal.fire({title: 'Aguarde...',  text: 'Gravando...', icon: 'info', showConfirmButton: false})
+            Swal.fire({title: 'Aguarde...',  text: 'Gravando. Pode demorar alguns segundos', icon: 'info', showConfirmButton: false})
         } else {
             event.preventDefault();
             message.textContent = 'Por favor, selecione um arquivo de imagem.';
