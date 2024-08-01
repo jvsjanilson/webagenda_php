@@ -19,7 +19,9 @@ class AgendaObserver
      */
     public function updating(Agenda $agenda): void
     {
-        $agenda->user_id = auth()->user()->id;
+        if ($agenda->entregue == 1) {
+            $agenda->user_id = auth()->user()->id;
+        }
     }
 
     /**

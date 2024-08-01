@@ -197,20 +197,21 @@ Agenda Montagem
                     </div>
                 </div>
 
-                @if ((Auth::user()->superuser == 1 || Auth::user()->montador) && $a->entregue == 0)
+
+                @if ((Auth::user()->superuser == 1 || Auth::user()->montador == 1  || Auth::user()->empresas->contains('user_id', $a->user_id) ) && $a->entregue == 0)
                 <div class="card-footer d-inline">
                     <div class="form-row col-12 d-flex">
-                        @if (Auth::user()->superuser == 1)
-                        <a class="btn active bg-gradient-primary mr-2" title="Editar" href="{{ route('agendamontagens.edit', $a->id) }}"><i class="fas fa-pencil-alt"></i></a>
+                        @if (Auth::user()->superuser == 1  || Auth::user()->empresas->contains('user_id', $a->user_id) )
+                            <a class="btn active bg-gradient-primary mr-2" title="Editar" href="{{ route('agendamontagens.edit', $a->id) }}"><i class="fas fa-pencil-alt"></i></a>
 
-                        <form action="{{ route('agendamontagens.destroy', $a->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn active bg-gradient-danger mr-2" onclick="if (!confirm('Deseja realmente remover?')) { event.preventDefault(); }" title="Remover" type="submit"><i class="fas fa-trash"></i></button>
-                        </form>
+                            <form action="{{ route('agendamontagens.destroy', $a->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn active bg-gradient-danger mr-2" onclick="if (!confirm('Deseja realmente remover?')) { event.preventDefault(); }" title="Remover" type="submit"><i class="fas fa-trash"></i></button>
+                            </form>
                         @endif
 
-                        @if (Auth::user()->superuser == 1 || Auth::user()->montador)
+                        @if (Auth::user()->superuser == 1 || Auth::user()->montador == 1)
                             <a  class="btn active bg-gradient-info mr-2" href="{{ route('agendamontagens.entregue', $a->id) }}"><i class="fas fa-check"></i></a>
                         @endif
 
@@ -218,14 +219,14 @@ Agenda Montagem
                 </div>
                 @endif
 
-                @if ((Auth::user()->superuser == 1 || Auth::user()->montador) && $a->entregue == 1)
-                <div class="card-footer d-inline">
-                    <div class="form-row col-12 d-flex">
-                        <a class="btn active bg-gradient-info mr-2" title="Editar" href="{{ route('agendamontagens.images', $a->id) }}"><i class="fas fa-images"></i></a>
+                {{-- @if ((Auth::user()->superuser == 1 || Auth::user()->montador == 1 || ) && $a->entregue == 1) --}}
+                @if ($a->entregue == 1)
+                    <div class="card-footer d-inline">
+                        <div class="form-row col-12 d-flex">
+                            <a class="btn active bg-gradient-info mr-2" title="Editar" href="{{ route('agendamontagens.images', $a->id) }}"><i class="fas fa-images"></i></a>
+                        </div>
                     </div>
-                </div>
                 @endif
-
 
             </div>
         </div>
