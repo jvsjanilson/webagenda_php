@@ -71,7 +71,7 @@ Agenda Montagem
 
         @foreach ($agendas as $a)
         <div class="col-md-4">
-            <div class="card {{ $a->entregue == 1 ? 'card-success' : 'card-primary' }} card-outline direct-chat direct-chat-primary">
+            <div class="card card-primary card-outline direct-chat direct-chat-primary">
                 @if ($a->entregue == 1)
                 <div class="ribbon-wrapper ">
                     <div class="ribbon bg-success">
@@ -97,7 +97,7 @@ Agenda Montagem
                             </div>
                         </div>
 
-                        <div class="direct-chat-msg text-center  {{ $a->entregue == 1 ? 'bg-success' : 'bg-primary' }} text-white rounded">
+                        <div class="direct-chat-msg text-center text-white rounded {{ $a->empresa->class_tarja_color }}  {{ $a->empresa->class_font_color }}">
                             <div class="direct-chat-infos clearfix">
                                 <span class="direct-chat-name text-center">INFORMAÇÕES DE MONTAGEM</span>
                             </div>
@@ -193,6 +193,18 @@ Agenda Montagem
                             </div>
                         </div>
                         @endif
+
+
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-left">
+                                   CRIADO POR:
+                                </span>
+                                <span class="direct-chat-name float-right">
+                                    {{ Str::upper($a->user->name) }}
+                                </span>
+                            </div>
+                        </div>
 
                     </div>
                 </div>

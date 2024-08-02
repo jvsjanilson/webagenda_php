@@ -73,7 +73,7 @@ Agenda Entrega
         @foreach ($agendas as $a)
 
         <div class="col-md-4">
-            <div class="card {{ $a->entregue == 1 ? 'card-success' : 'card-primary' }} card-outline direct-chat direct-chat-primary">
+            <div class="card card-primary card-outline direct-chat direct-chat-primary">
                 @if ($a->entregue == 1)
                 <div class="ribbon-wrapper ">
                     <div class="ribbon bg-success">
@@ -91,7 +91,7 @@ Agenda Entrega
                     <div class="direct-chat-messages" style="height: auto; max-height: 400px; min-height: 250px">
 
 
-                        <div class="direct-chat-msg text-center active {{ $a->entregue == 1 ? 'bg-success' : 'bg-primary' }} text-white rounded">
+                        <div class="direct-chat-msg text-center active rounded {{ $a->empresa->class_tarja_color }}  {{ $a->empresa->class_font_color }}">
                             <div class="direct-chat-infos clearfix">
                                 <span class="direct-chat-name text-center">INFORMAÇÕES DE ENTREGA</span>
                             </div>
@@ -217,6 +217,17 @@ Agenda Entrega
                         </div>
                         @endif
 
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-left">
+                                    CRIADO POR:
+                                </span>
+                                <span class="direct-chat-name float-right">
+                                    {{ Str::upper($a->user->name) }}
+                                </span>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -234,12 +245,12 @@ Agenda Entrega
                         </form>
                         @endif
 
-                        @if (Auth::user()->superuser == 1   || Auth::user()->entregador == 1)
-                            <form action="{{ route('agendas.done', $a->id) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <button class="btn active bg-gradient-info mr-2" onclick="if (!confirm('Deseja realmente concluir?')) { event.preventDefault(); }" title="Concluir" type="submit"><i class="fas fa-check"></i></button>
-                            </form>
+                        @if (Auth::user()->superuser == 1 || Auth::user()->entregador == 1)
+                        <form action="{{ route('agendas.done', $a->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <button class="btn active bg-gradient-info mr-2" onclick="if (!confirm('Deseja realmente concluir?')) { event.preventDefault(); }" title="Concluir" type="submit"><i class="fas fa-check"></i></button>
+                        </form>
                         @endif
 
                     </div>
