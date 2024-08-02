@@ -152,7 +152,18 @@ Agenda Monagem
         }
 
     document.getElementById('openFileDialog').addEventListener('click', function() {
-        document.getElementById('fileInput').click();
+
+        if ($(".img-fluid").length >= 3 ) {
+            Swal.fire({
+                title: 'Limite Foto',
+                text: 'Limite máximo de 3 fotos.',
+                icon: 'info', showConfirmButton: true
+            });
+
+        } else {
+            document.getElementById('fileInput').click();
+        }
+
     });
 
     document.getElementById('fileInput').addEventListener('change', function(event) {

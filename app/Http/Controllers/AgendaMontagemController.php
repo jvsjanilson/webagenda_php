@@ -227,12 +227,9 @@ class AgendaMontagemController extends Controller
         $agenda = $this->model->find($id);
 
 
-        // $request->validate([
-        //     'fotos' => ['required', 'max:1024']
-        // ],
-        // [
-        //     'fotos.required' => 'Informe pelo menos uma foto',
-        // ]);
+        $request->validate(
+                ['fotos' => ['array', 'max:3']],
+        );
 
         if ( count($request->only('fotos')) > 0) {
 
