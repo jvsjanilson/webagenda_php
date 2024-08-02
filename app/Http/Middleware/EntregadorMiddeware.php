@@ -21,6 +21,8 @@ class EntregadorMiddeware
                 $allowRoutes = [
                     'agendas.index',
                     'agendas.done',
+                    'agendas.entregue',
+                    'agendas.images',
                 ];
 
                 if (in_array(Route::currentRouteName(), $allowRoutes ))
