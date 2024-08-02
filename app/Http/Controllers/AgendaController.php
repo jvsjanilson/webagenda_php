@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AgendaEntregaFormRequest;
 use Illuminate\Http\Request;
 use App\Models\Agenda;
+use App\Models\AgendaFoto;
 use App\Models\Config;
 use App\Models\Limite;
 use App\Models\Empresa;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
 
 class AgendaController extends Controller
 {
@@ -173,7 +174,7 @@ class AgendaController extends Controller
 
         if (Auth::user()->superuser == 0) {
             if ($reg->user_id != Auth::user()->id) {
-                $errors = array("error" => ['Usuário sem permissão']);
+                $errors = array("error" => ['Sem permissão para alterar agenda de outro usuário. Contacte o administrador.']);
                 return redirect()->back()->withErrors($errors)->withInput();
             }
         }
@@ -199,6 +200,13 @@ class AgendaController extends Controller
     public function destroy(string $id)
     {
         $reg = $this->model->find($id);
+
+        if (Auth::user()->superuser == 0) {
+            if ($reg->user_id != Auth::user()->id) {
+                $errors = array("error" => ['Sem permissão para remover agenda de outro usuário. Contacte o administrador.']);
+                return redirect()->back()->withErrors($errors)->withInput();
+            }
+        }
         try {
             $reg->delete();
 
@@ -209,18 +217,72 @@ class AgendaController extends Controller
         return redirect()->route('agendas.index');
     }
 
-    /**
-     * Conclui agenda
-     *
-     * @param string $id
-     * @return void
-     */
-    public function done(string $id)
+    // /**
+    //  * Conclui agenda
+    //  *
+    //  * @param string $id
+    //  * @return void
+    //  */
+    // public function done(string $id)
+    // {
+    //     $reg = $this->model->find($id);
+    //     $reg->entregue = 1;
+    //     $reg->save();
+    //     return redirect()->route('agendas.index');
+
+    // }
+
+    public function entregue(string $id)
     {
         $reg = $this->model->find($id);
-        $reg->entregue = 1;
-        $reg->save();
-        return redirect()->route('agendas.index');
+        return view('agenda.entrega', compact('reg'));
+    }
 
+    public function done(Request $request, string $id)
+    {
+        $agenda = $this->model->find($id);
+
+
+        $request->validate(
+                ['fotos' => ['array', 'max:3']],
+        );
+
+        if ( count($request->only('fotos')) > 0) {
+
+            $inc = 0;
+
+            foreach ($request->file('fotos') as $foto)
+            {
+
+                $path = $foto->store('photos', 's3');
+                Storage::disk('s3')->setVisibility($path, 'public');
+
+                AgendaFoto::create([
+                    'agenda_id' => $agenda->id,
+                    'foto_path' => $path
+                ]);
+
+                $inc++;
+            }
+
+            if ($inc > 0) {
+
+                $agenda->entregue = true;
+                $agenda->save();
+            }
+            return redirect()->route('agendas.index', ['data_inicial' =>  $agenda->dt_agenda, 'data_fim'=>  $agenda->dt_agenda]);
+        } else {
+            $agenda->entregue = true;
+            $agenda->save();
+            return redirect()->route('agendas.index', ['data_inicial' =>  $agenda->dt_agenda, 'data_fim'=>  $agenda->dt_agenda]);
+        }
+    }
+
+    public function images(string $id)
+    {
+        $images = AgendaFoto::where('agenda_id', $id)->get();
+       // dd($images);
+
+        return view('agenda.fotos', compact('images'));
     }
 }

@@ -20,7 +20,9 @@ Route::middleware(['auth', 'licenca', 'montador', 'entregador'])->group(function
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::resource('/agendas', AgendaController::class);
-    Route::put('/agendas/{id}/done', [AgendaController::class, 'done'])->name('agendas.done');
+    Route::post('/agendas/{id}/done', [AgendaController::class, 'done'])->name('agendas.done');
+    Route::get('/agendas/{id}/entregue', [AgendaController::class, 'entregue'])->name('agendas.entregue');
+    Route::get('/agendas/{id}/images', [AgendaController::class, 'images'])->name('agendas.images');
 
     Route::resource('/agendamontagens', AgendaMontagemController::class);
     Route::post('/agendamontagens/{id}/done', [AgendaMontagemController::class, 'done'])->name('agendamontagens.done');

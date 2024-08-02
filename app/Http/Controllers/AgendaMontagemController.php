@@ -166,7 +166,7 @@ class AgendaMontagemController extends Controller
 
         if (Auth::user()->superuser == 0) {
             if ($reg->user_id != Auth::user()->id) {
-                $errors = array("error" => ['Usuário sem permissão']);
+                $errors = array("error" => ['Sem permissão para alterar agenda de outro usuário. Contacte o administrador.']);
                 return redirect()->back()->withErrors($errors)->withInput();
             }
         }
@@ -192,6 +192,12 @@ class AgendaMontagemController extends Controller
     public function destroy(string $id)
     {
         $reg = $this->model->find($id);
+        if (Auth::user()->superuser == 0) {
+            if ($reg->user_id != Auth::user()->id) {
+                $errors = array("error" => ['Sem permissão para remover agenda de outro usuário. Contacte o administrador.']);
+                return redirect()->back()->withErrors($errors)->withInput();
+            }
+        }
         try {
             $reg->delete();
 

@@ -37,6 +37,7 @@ Agenda Entrega
                             <button type="button" id="btn-limite-diario" class="btn active bg-gradient-success" title=" Limite Diário"><i class="fas fa-sliders-h"></i></button>
                         </div>
                         @endif
+
                         <div class="col-auto d-flex align-items-end form-group">
                             <strong class="pr-1">Limite do dia: </strong>
                             <span title="Limites" id="span-limite" class="badge bg-primary">
@@ -58,10 +59,7 @@ Agenda Entrega
             </div>
         </form>
     </div>
-
-
 </div>
-
 @stop
 
 @section('content')
@@ -162,7 +160,6 @@ Agenda Entrega
                             </div>
                         </div>
 
-
                         <div class="direct-chat-msg">
                             <div class="direct-chat-infos clearfix">
                                 <span class="direct-chat-name float-left">FRETE:</span>
@@ -231,7 +228,6 @@ Agenda Entrega
                     </div>
                 </div>
 
-
                 @if ((Auth::user()->superuser == 1 || Auth::user()->empresas->contains(App\Models\UserEmpresa::where('user_id', Auth::user()->id)->where('empresa_id', $a->empresa_id)->first() ) ) && $a->entregue == 0 )
                 <div class="card-footer d-inline">
                     <div class="form-row col-12 d-flex">
@@ -246,15 +242,19 @@ Agenda Entrega
                         @endif
 
                         @if (Auth::user()->superuser == 1 || Auth::user()->entregador == 1)
-                        <form action="{{ route('agendas.done', $a->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <button class="btn active bg-gradient-info mr-2" onclick="if (!confirm('Deseja realmente concluir?')) { event.preventDefault(); }" title="Concluir" type="submit"><i class="fas fa-check"></i></button>
-                        </form>
+                            <a  class="btn active bg-gradient-info mr-2" href="{{ route('agendas.entregue', $a->id) }}"><i class="fas fa-check"></i></a>
                         @endif
 
                     </div>
                 </div>
+                @endif
+
+                @if ($a->entregue == 1)
+                    <div class="card-footer d-inline">
+                        <div class="form-row col-12 d-flex">
+                            <a class="btn active bg-gradient-info mr-2" title="Editar" href="{{ route('agendas.images', $a->id) }}"><i class="fas fa-images"></i></a>
+                        </div>
+                    </div>
                 @endif
 
             </div>
