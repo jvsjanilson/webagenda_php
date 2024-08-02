@@ -6,7 +6,7 @@ Agenda Montagem (Fotos)
 
 @section('content')
 <div class="d-flex justify-content-center pt-4">
-    <div class="col-12 col-md-4">
+    <div class="col-md-12">
         <div class="card card-primary card-outline direct-chat direct-chat-primary">
 
             <div class="card-header">
