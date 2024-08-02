@@ -20,7 +20,8 @@ class MontadorSeeder extends Seeder
                 'email'=> 'destakmagazinemontagem@gmail.com',
                 'password' => bcrypt('@montador123'),
                 'superuser' => 0,
-                'montador' => 1
+                'montador' => 1,
+                'entregador' => 0
             ],
         );
 
