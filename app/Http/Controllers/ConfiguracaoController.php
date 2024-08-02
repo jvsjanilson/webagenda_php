@@ -73,7 +73,6 @@ class ConfiguracaoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
         abort(404);
     }
 }

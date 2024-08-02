@@ -50,14 +50,9 @@ class AgendaController extends Controller
                     $q->where('dt_agenda', '<=', $dtFim);
                 });
             })
-            ->where('tipo', 'E')
-            ->orderBy('empresa_id')
-            ->orderBy('entregue')
-            ->orderBy('dt_agenda')
-            ->get();
+            ->where('tipo', 'E')->orderBy('empresa_id')->orderBy('entregue')->orderBy('dt_agenda')->get();
 
         } else {
-
 
             $dtInicial = Carbon::now()->toDateString();
             $dtFim = Carbon::now()->toDateString();
@@ -92,9 +87,7 @@ class AgendaController extends Controller
         })
         ->when($dtInicial != $dtFim, function($q) use ($dtInicial, $dtFim){
             $q->whereBetween('dt_agenda', [$dtInicial, $dtFim]);
-        })
-
-        ->count();
+        })->count();
         return view('agenda.index', compact('agendas', 'dtInicial', 'dtFim', 'limiteTotal', 'totalUsado'));
 
     }
@@ -104,18 +97,12 @@ class AgendaController extends Controller
      */
     public function create()
     {
-        //$empresas = Empresa::all();
-
         $empresas = Empresa::join('user_empresas', 'empresas.id', '=', 'user_empresas.empresa_id')
         ->join('users', 'user_empresas.user_id', '=', 'users.id')
         ->when(Auth::user()->superuser == 0, function($q) {
                  $q->where('user_empresas.user_id', Auth::user()->id);
             })
-        ->select('empresas.*')
-        ->distinct()
-        ->get();
-
-
+        ->select('empresas.*')->distinct()->get();
         return view('agenda.create', compact('empresas'));
     }
 
@@ -127,16 +114,9 @@ class AgendaController extends Controller
         $data = $request->except('_token');
         $data['tipo'] = 'E';
         $dtAgenda = $data['dt_agenda'];
-
         $limiteEntrega = Config::first()->limite_entrega;
-        $limiteDiario = Limite::where('dt_limite', $dtAgenda)
-            ->where('tipo_agenda', 'E')
-            ->count();
-
-        $countAgendaEntregaDia = $this->model
-            ->where('dt_agenda', $dtAgenda)
-            ->where('tipo', 'E')
-            ->count();
+        $limiteDiario = Limite::where('dt_limite', $dtAgenda)->where('tipo_agenda', 'E')->count();
+        $countAgendaEntregaDia = $this->model->where('dt_agenda', $dtAgenda)->where('tipo', 'E')->count();
 
         if ($countAgendaEntregaDia >= ($limiteEntrega+$limiteDiario) ) {
             $errors = array("error" => ['Limite de montagem diária foi atingido. Entre em contato com o responsável.']);
@@ -174,7 +154,9 @@ class AgendaController extends Controller
 
         if (Auth::user()->superuser == 0) {
             if ($reg->user_id != Auth::user()->id) {
-                $errors = array("error" => ['Sem permissão para alterar agenda de outro usuário. Contacte o administrador.']);
+                $errors = array("error" => [
+                    'Sem permissão para alterar agenda de outro usuário. Contacte o administrador.'
+                ]);
                 return redirect()->back()->withErrors($errors)->withInput();
             }
         }
@@ -203,7 +185,9 @@ class AgendaController extends Controller
 
         if (Auth::user()->superuser == 0) {
             if ($reg->user_id != Auth::user()->id) {
-                $errors = array("error" => ['Sem permissão para remover agenda de outro usuário. Contacte o administrador.']);
+                $errors = array("error" => [
+                    'Sem permissão para remover agenda de outro usuário. Contacte o administrador.'
+                ]);
                 return redirect()->back()->withErrors($errors)->withInput();
             }
         }
@@ -217,27 +201,25 @@ class AgendaController extends Controller
         return redirect()->route('agendas.index');
     }
 
-    // /**
-    //  * Conclui agenda
-    //  *
-    //  * @param string $id
-    //  * @return void
-    //  */
-    // public function done(string $id)
-    // {
-    //     $reg = $this->model->find($id);
-    //     $reg->entregue = 1;
-    //     $reg->save();
-    //     return redirect()->route('agendas.index');
-
-    // }
-
+    /**
+     * Direciona para formulario de entrega
+     *
+     * @param string $id
+     * @return void
+     */
     public function entregue(string $id)
     {
         $reg = $this->model->find($id);
         return view('agenda.entrega', compact('reg'));
     }
 
+    /**
+     * Concluie a entrega e armazena as fotos
+     *
+     * @param Request $request
+     * @param string $id
+     * @return void
+     */
     public function done(Request $request, string $id)
     {
         $agenda = $this->model->find($id);
@@ -270,19 +252,29 @@ class AgendaController extends Controller
                 $agenda->entregue = true;
                 $agenda->save();
             }
-            return redirect()->route('agendas.index', ['data_inicial' =>  $agenda->dt_agenda, 'data_fim'=>  $agenda->dt_agenda]);
+            return redirect()->route('agendas.index', [
+                'data_inicial' =>  $agenda->dt_agenda,
+                'data_fim'=>  $agenda->dt_agenda
+            ]);
         } else {
             $agenda->entregue = true;
             $agenda->save();
-            return redirect()->route('agendas.index', ['data_inicial' =>  $agenda->dt_agenda, 'data_fim'=>  $agenda->dt_agenda]);
+            return redirect()->route('agendas.index', [
+                'data_inicial' =>  $agenda->dt_agenda,
+                'data_fim'=>  $agenda->dt_agenda
+            ]);
         }
     }
 
+    /**
+     * Recupera as imagens da entrega
+     *
+     * @param string $id
+     * @return void
+     */
     public function images(string $id)
     {
         $images = AgendaFoto::where('agenda_id', $id)->get();
-       // dd($images);
-
         return view('agenda.fotos', compact('images'));
     }
 }

@@ -104,9 +104,7 @@ class AgendaMontagemController extends Controller
         ->when(Auth::user()->superuser == 0, function($q) {
                  $q->where('user_empresas.user_id', Auth::user()->id);
             })
-        ->select('empresas.*')
-        ->distinct()
-        ->get();
+        ->select('empresas.*')->distinct()->get();
         return view('agenda_montagem.create', compact('empresas'));
     }
 
@@ -131,12 +129,17 @@ class AgendaMontagemController extends Controller
             ->count();
 
         if ($countAgendaMontagemDia >= ($limiteMontagem+$limiteDiario) ) {
-            $errors = array("error" => ['Limite de montagem diária foi atingido. Entre em contato com o responsável.']);
+            $errors = array("error" => [
+                'Limite de montagem diária foi atingido. Entre em contato com o responsável.'
+            ]);
             return redirect()->back()->withErrors($errors)->withInput();
         }
 
         $this->model->create($data);
-        return  redirect()->route('agendamontagens.index', ['data_inicial' =>  $dtAgenda, 'data_fim'=>  $dtAgenda]);
+        return  redirect()->route('agendamontagens.index', [
+            'data_inicial' =>  $dtAgenda,
+            'data_fim'=>  $dtAgenda
+        ]);
 
     }
 
@@ -166,7 +169,9 @@ class AgendaMontagemController extends Controller
 
         if (Auth::user()->superuser == 0) {
             if ($reg->user_id != Auth::user()->id) {
-                $errors = array("error" => ['Sem permissão para alterar agenda de outro usuário. Contacte o administrador.']);
+                $errors = array("error" => [
+                    'Sem permissão para alterar agenda de outro usuário. Contacte o administrador.'
+                ]);
                 return redirect()->back()->withErrors($errors)->withInput();
             }
         }
@@ -194,7 +199,9 @@ class AgendaMontagemController extends Controller
         $reg = $this->model->find($id);
         if (Auth::user()->superuser == 0) {
             if ($reg->user_id != Auth::user()->id) {
-                $errors = array("error" => ['Sem permissão para remover agenda de outro usuário. Contacte o administrador.']);
+                $errors = array("error" => [
+                    'Sem permissão para remover agenda de outro usuário. Contacte o administrador.'
+                ]);
                 return redirect()->back()->withErrors($errors)->withInput();
             }
         }
@@ -209,25 +216,24 @@ class AgendaMontagemController extends Controller
     }
 
     /**
-     * Conclui agenda
+     * Redireciona para o formulario para anexar as fotos
      *
      * @param string $id
      * @return void
      */
-    // public function done(string $id)
-    // {
-    //     $reg = $this->model->find($id);
-    //     $reg->entregue = 1;
-    //     $reg->save();
-    //     return redirect()->route('agendamontagens.index');
-
-    // }
     public function entregue(string $id)
     {
         $reg = $this->model->find($id);
         return view('agenda_montagem.entrega', compact('reg'));
     }
 
+    /**
+     * Conclui a montagem e armazenas as imagens
+     *
+     * @param Request $request
+     * @param string $id
+     * @return void
+     */
     public function done(Request $request, string $id)
     {
         $agenda = $this->model->find($id);
@@ -254,43 +260,35 @@ class AgendaMontagemController extends Controller
 
                 $inc++;
             }
-            // foreach ($request->file('fotos') as $foto)
-            // {
 
-            //     $path = $foto->getClientOriginalName();
-            //     $ext = $foto->extension();
-
-            //     $imageName = md5($path . strtotime("now")) . '.'. $ext;
-
-
-            //     $path = $foto->storeAs('fotos', $imageName);
-
-
-            //     AgendaFoto::create([
-            //         'agenda_id' => $agenda->id,
-            //         'foto_path' => $imageName
-            //     ]);
-
-            //     $inc++;
-            // }
             if ($inc > 0) {
 
                 $agenda->entregue = true;
                 $agenda->save();
             }
-            return redirect()->route('agendamontagens.index', ['data_inicial' =>  $agenda->dt_agenda, 'data_fim'=>  $agenda->dt_agenda]);
+            return redirect()->route('agendamontagens.index', [
+                'data_inicial' =>  $agenda->dt_agenda,
+                'data_fim'=>  $agenda->dt_agenda
+            ]);
         } else {
             $agenda->entregue = true;
             $agenda->save();
-            return redirect()->route('agendamontagens.index', ['data_inicial' =>  $agenda->dt_agenda, 'data_fim'=>  $agenda->dt_agenda]);
+            return redirect()->route('agendamontagens.index', [
+                'data_inicial' =>  $agenda->dt_agenda,
+                'data_fim'=>  $agenda->dt_agenda
+            ]);
         }
     }
 
+    /**
+     * Recupera as imagens da montagem
+     *
+     * @param string $id
+     * @return void
+     */
     public function images(string $id)
     {
         $images = AgendaFoto::where('agenda_id', $id)->get();
-       // dd($images);
-
         return view('agenda_montagem.fotos', compact('images'));
     }
 }
