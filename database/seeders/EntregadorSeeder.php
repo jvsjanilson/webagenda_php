@@ -20,7 +20,8 @@ class EntregadorSeeder extends Seeder
                 'email'=> 'destakmagazineentrega@gmail.com',
                 'password' => bcrypt('@entregador123'),
                 'superuser' => 0,
-                'montador' => 1
+                'montador' => 0,
+                'entregador' => 1,
             ], //destak
         );
 
