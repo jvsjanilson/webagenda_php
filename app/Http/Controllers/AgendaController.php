@@ -50,6 +50,7 @@ class AgendaController extends Controller
                 });
             })
             ->where('tipo', 'E')
+            ->orderBy('empresa_id')
             ->orderBy('entregue')
             ->orderBy('dt_agenda')
             ->get();
@@ -64,6 +65,7 @@ class AgendaController extends Controller
                 ->where('tipo', 'E')
                 ->where('dt_agenda', '>=', $dtInicial)
                 ->where('dt_agenda', '<=', $dtFim)
+                ->orderBy('empresa_id')
                 ->orderBy('entregue')
                 ->get();
             }
