@@ -71,11 +71,11 @@ Agenda Montagem
 
         @foreach ($agendas as $a)
         <div class="col-md-4">
-            <div class="card {{ $a->entregue == 1 ? 'card-success' : 'card-primary' }} card-outline direct-chat direct-chat-primary">
+            <div class="card card-primary card-outline direct-chat direct-chat-primary">
                 @if ($a->entregue == 1)
                 <div class="ribbon-wrapper ">
                     <div class="ribbon bg-success">
-                        Entregue
+                        Montado
                     </div>
                 </div>
                 @endif
@@ -97,7 +97,7 @@ Agenda Montagem
                             </div>
                         </div>
 
-                        <div class="direct-chat-msg text-center  {{ $a->entregue == 1 ? 'bg-success' : 'bg-primary' }} text-white rounded">
+                        <div class="direct-chat-msg text-center text-white rounded {{ $a->empresa->class_tarja_color }}  {{ $a->empresa->class_font_color }}">
                             <div class="direct-chat-infos clearfix">
                                 <span class="direct-chat-name text-center">INFORMAÇÕES DE MONTAGEM</span>
                             </div>
@@ -171,6 +171,18 @@ Agenda Montagem
                             </div>
                         </div>
 
+                        @if ($a->entregue == 1 && Auth::user()->montador == 1)
+
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-left">Data Montagem:</span>
+                                <span class="direct-chat-timestamp float-right">
+                                    <span><strong>{{ $a->updated_at  }} </strong> </span>
+                                </span>
+                            </div>
+                        </div>
+                        @endif
+
                         @if ($a->obs != '')
                         <div class="direct-chat-msg">
                             <div class="direct-chat-infos clearfix">
@@ -182,29 +194,51 @@ Agenda Montagem
                         </div>
                         @endif
 
+
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-left">
+                                   CRIADO POR:
+                                </span>
+                                <span class="direct-chat-name float-right">
+                                    {{ Str::upper($a->user->name) }}
+                                </span>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-                @if (Auth::user()->superuser == 1)
+                @if ((Auth::user()->superuser == 1 || Auth::user()->empresas->contains(App\Models\UserEmpresa::where('user_id', Auth::user()->id)->where('empresa_id', $a->empresa_id)->first() ) ) && $a->entregue == 0 )
                 <div class="card-footer d-inline">
                     <div class="form-row col-12 d-flex">
-                        <a class="btn active bg-gradient-primary mr-2" title="Editar" href="{{ route('agendamontagens.edit', $a->id) }}"><i class="fas fa-pencil-alt"></i></a>
+                        @if (Auth::user()->montador == 0  )
+                            <a class="btn active bg-gradient-primary mr-2" title="Editar" href="{{ route('agendamontagens.edit', $a->id) }}"><i class="fas fa-pencil-alt"></i></a>
 
-                        <form action="{{ route('agendamontagens.destroy', $a->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn active bg-gradient-danger mr-2" onclick="if (!confirm('Deseja realmente remover?')) { event.preventDefault(); }" title="Remover" type="submit"><i class="fas fa-trash"></i></button>
-                        </form>
+                            <form action="{{ route('agendamontagens.destroy', $a->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn active bg-gradient-danger mr-2" onclick="if (!confirm('Deseja realmente remover?')) { event.preventDefault(); }" title="Remover" type="submit"><i class="fas fa-trash"></i></button>
+                            </form>
+                        @endif
 
+                        @if (Auth::user()->superuser == 1 || Auth::user()->montador == 1)
+                            <a  class="btn active bg-gradient-info mr-2" href="{{ route('agendamontagens.entregue', $a->id) }}"><i class="fas fa-check"></i></a>
+                        @endif
 
-                        <form action="{{ route('agendamontagens.done', $a->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <button class="btn active bg-gradient-info mr-2" onclick="if (!confirm('Deseja realmente concluir?')) { event.preventDefault(); }" title="Concluir" type="submit"><i class="fas fa-check"></i></button>
-                        </form>
                     </div>
                 </div>
                 @endif
+
+
+                @if ($a->entregue == 1)
+                    <div class="card-footer d-inline">
+                        <div class="form-row col-12 d-flex">
+                            <a class="btn active bg-gradient-info mr-2" title="Editar" href="{{ route('agendamontagens.images', $a->id) }}"><i class="fas fa-images"></i></a>
+                        </div>
+                    </div>
+                @endif
+
             </div>
         </div>
         @endforeach

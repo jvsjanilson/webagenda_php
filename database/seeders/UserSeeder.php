@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             ['name' => 'Vendedor Destak',  'email'=> 'spindustriaecomercio@gmail.com', 'password' => bcrypt('@vendedor123'), 'superuser' => 0 ], //destak
             ['name' => 'Ziglar',  'email'=> 'ziglarmoveis@gmail.com', 'password' => bcrypt('@ziglar123'), 'superuser' => 0 ], //ziglar
             ['name' => 'Sono e Conforto',  'email'=> 'sonoeconfortorn@hotmail.com', 'password' => bcrypt('@sonoc123'), 'superuser' => 0 ], //sono conforto
-            ['name' => 'Sono Prime',  'email'=> 'sonoeconfortoprime@hotmail.com ', 'password' => bcrypt('@sonop123'), 'superuser' => 0 ], //sono prime
+            ['name' => 'Sono Prime',  'email'=> 'sonoeconfortoprime@hotmail.com', 'password' => bcrypt('@sonop123'), 'superuser' => 0 ], //sono prime
         ]);
     }
 }

@@ -45,14 +45,18 @@ class LimiteController extends Controller
             ->where('dt_limite', $data['dt_limite'])
             ->exists();
         if ($exists) {
-            return response()->json(['error' => 'Limite já adicionar para o dia.'], 400);
+            return response()->json([
+                'error' => 'Limite já adicionar para o dia.'
+            ], 400);
         }
 
         try {
             $inserted = $this->model->create($data);
             return response()->json($inserted);
         } catch (\Throwable $th) {
-            return response()->json(['error' => 'Erro ao adicionar.'],400);
+            return response()->json([
+                'error' => 'Erro ao adicionar.'
+            ],400);
         }
     }
 
@@ -80,9 +84,13 @@ class LimiteController extends Controller
         $reg = $this->model->find($id);
         try {
             $reg->delete();
-            return response()->json(['message' => 'Removido com sucesso.']);
+            return response()->json([
+                'message' => 'Removido com sucesso.'
+            ]);
         } catch (\Throwable $th) {
-            return response()->json(['error' => 'Error ao remover']);
+            return response()->json([
+                'error' => 'Error ao remover'
+            ]);
         }
 
     }

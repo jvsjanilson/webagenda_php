@@ -39,8 +39,14 @@ class PagamentoController extends Controller
         return view('pagamento.form_pix');
     }
 
-
-    public function status(Request $request, $documento)
+    /**
+     * Verifica o status do pagamento
+     *
+     * @param Request $request
+     * @param string $documento
+     * @return void
+     */
+    public function status(Request $request, string $documento)
     {
 
         $pagto = Pagamento::where('status', 'ATIVA')
@@ -121,16 +127,9 @@ class PagamentoController extends Controller
             "chave" => env('GN_CHAVE_PIX'),
         ];
 
-//        dd($body);
-
         try {
             $api =  new EfiPay(Util::credentials());
-
-            //dd($api);
-
 	        $pix = $api->pixCreateImmediateCharge($params = [], $body);
-
-
 
             if ($pix["txid"]) {
 

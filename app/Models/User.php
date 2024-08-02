@@ -21,6 +21,7 @@ class User extends Authenticatable
         'email',
         'password',
         'superuser',
+        'montador'
     ];
 
     /**
@@ -44,5 +45,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function empresas()
+    {
+        return $this->hasMany(UserEmpresa::class, 'user_id', 'id');
     }
 }

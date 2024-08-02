@@ -17,6 +17,11 @@ class Agenda extends Model
         return $this->belongsTo(Empresa::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function setValorAttribute($value)
     {
         $this->attributes['valor'] = ($value != "") ? (float) str_replace(',', '.', str_replace('.', '', $value)) : 0;
@@ -36,6 +41,11 @@ class Agenda extends Model
     public function getValorFreteAttribute($value)
     {
         return number_format($value, 2, ',', '.');
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format("d/m/Y H\h:i\m");
     }
 
     //  return ($valor != "") ? (float) str_replace(',', '.', str_replace('.', '', $valor)) : 0

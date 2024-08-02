@@ -16,14 +16,18 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false]);
 
-Route::middleware(['auth', 'licenca'])->group(function() {
+Route::middleware(['auth', 'licenca', 'montador', 'entregador'])->group(function() {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::resource('/agendas', AgendaController::class);
-    Route::put('/agendas/{id}/done', [AgendaController::class, 'done'])->name('agendas.done');
+    Route::post('/agendas/{id}/done', [AgendaController::class, 'done'])->name('agendas.done');
+    Route::get('/agendas/{id}/entregue', [AgendaController::class, 'entregue'])->name('agendas.entregue');
+    Route::get('/agendas/{id}/images', [AgendaController::class, 'images'])->name('agendas.images');
 
     Route::resource('/agendamontagens', AgendaMontagemController::class);
-    Route::put('/agendamontagens/{id}/done', [AgendaMontagemController::class, 'done'])->name('agendamontagens.done');
+    Route::post('/agendamontagens/{id}/done', [AgendaMontagemController::class, 'done'])->name('agendamontagens.done');
+    Route::get('/agendamontagens/{id}/entregue', [AgendaMontagemController::class, 'entregue'])->name('agendamontagens.entregue');
+    Route::get('/agendamontagens/{id}/images', [AgendaMontagemController::class, 'images'])->name('agendamontagens.images');
 
     Route::apiResource('/limites', LimiteController::class);
     Route::resource('/configs', ConfiguracaoController::class)->middleware('superuser');
