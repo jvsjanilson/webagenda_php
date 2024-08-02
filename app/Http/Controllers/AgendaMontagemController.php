@@ -77,7 +77,7 @@ class AgendaMontagemController extends Controller
             $q->whereBetween('dt_limite', [$dtInicial, $dtFim]);
         })
         ->where('tipo_agenda', 'M')
-        ->count() + $limiteGeral;
+        ->sum('limite') + $limiteGeral;
 
 
         $totalUsado = $this->model

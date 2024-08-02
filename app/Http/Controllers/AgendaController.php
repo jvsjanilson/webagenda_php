@@ -68,33 +68,33 @@ class AgendaController extends Controller
                 ->orderBy('empresa_id')
                 ->orderBy('entregue')
                 ->get();
-            }
+        }
 
-            $diff = Carbon::parse($dtInicial)->diffInDays(Carbon::parse($dtFim));
-            if ($diff >= 1.0) {
-                $limiteGeral += ($diff * Config::first()->limite_entrega);
-            }
+        $diff = Carbon::parse($dtInicial)->diffInDays(Carbon::parse($dtFim));
+        if ($diff >= 1.0) {
+            $limiteGeral += ($diff * Config::first()->limite_entrega);
+        }
 
-            $limiteTotal = Limite::when($dtInicial == $dtFim, function($q) use ($dtFim){
-                $q->where('dt_limite', $dtFim);
-            })
-            ->when($dtInicial != $dtFim, function($q) use ($dtInicial, $dtFim) {
-                $q->whereBetween('dt_limite', [$dtInicial, $dtFim]);
-            })
-            ->where('tipo_agenda', 'E')
-            ->count() + $limiteGeral;
+        $limiteTotal = Limite::when($dtInicial == $dtFim, function($q) use ($dtFim){
+            $q->where('dt_limite', $dtFim);
+        })
+        ->when($dtInicial != $dtFim, function($q) use ($dtInicial, $dtFim) {
+            $q->whereBetween('dt_limite', [$dtInicial, $dtFim]);
+        })
+        ->where('tipo_agenda', 'E')
+        ->sum('limite') + $limiteGeral;
 
-            $totalUsado = $this->model
-            ->where('tipo', 'E')
-            ->when($dtInicial == $dtFim, function($q) use ($dtFim){
-                $q->where('dt_agenda', $dtFim);
-            })
-            ->when($dtInicial != $dtFim, function($q) use ($dtInicial, $dtFim){
-                $q->whereBetween('dt_agenda', [$dtInicial, $dtFim]);
-            })
+        $totalUsado = $this->model
+        ->where('tipo', 'E')
+        ->when($dtInicial == $dtFim, function($q) use ($dtFim){
+            $q->where('dt_agenda', $dtFim);
+        })
+        ->when($dtInicial != $dtFim, function($q) use ($dtInicial, $dtFim){
+            $q->whereBetween('dt_agenda', [$dtInicial, $dtFim]);
+        })
 
-            ->count();
-            return view('agenda.index', compact('agendas', 'dtInicial', 'dtFim', 'limiteTotal', 'totalUsado'));
+        ->count();
+        return view('agenda.index', compact('agendas', 'dtInicial', 'dtFim', 'limiteTotal', 'totalUsado'));
 
     }
 
