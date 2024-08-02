@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('agendas', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->nullable()->default(1);
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('entregador')->default(false);
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('agendas', function (Blueprint $table) {
-            $table->dropColumn('user_id');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('entregador');
         });
     }
 };

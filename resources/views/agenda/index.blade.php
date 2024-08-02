@@ -26,10 +26,11 @@ Agenda Entrega
                         <div class="col-auto d-flex align-items-end form-group">
                             <button type="submit" class="btn active bg-gradient-secondary" title="Filtrar"><i class="fa fa-filter"></i></button>
                         </div>
-
+                        @if (Auth::user()->entregador == 0)
                         <div class="col-auto d-flex align-items-end form-group">
                             <a href="{{ route('agendas.create') }}" class="btn active bg-gradient-primary" title="Adicionar"><i class="fa fa-plus"></i></a>
                         </div>
+                        @endif
 
                         @if (Auth::user()->superuser == 1)
                         <div class="col-auto d-flex align-items-end form-group">
@@ -193,6 +194,18 @@ Agenda Entrega
                             </div>
                         </div>
 
+                        @if ($a->entregue == 1 && Auth::user()->entregador == 1)
+
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-left">Data Entrega:</span>
+                                <span class="direct-chat-timestamp float-right">
+                                    <span><strong>{{ $a->updated_at  }} </strong> </span>
+                                </span>
+                            </div>
+                        </div>
+                        @endif
+
                         @if ($a->obs != "")
                         <div class="direct-chat-msg">
                             <div class="direct-chat-infos clearfix">
@@ -211,7 +224,7 @@ Agenda Entrega
                 @if ((Auth::user()->superuser == 1 || Auth::user()->empresas->contains(App\Models\UserEmpresa::where('user_id', Auth::user()->id)->where('empresa_id', $a->empresa_id)->first() ) ) && $a->entregue == 0 )
                 <div class="card-footer d-inline">
                     <div class="form-row col-12 d-flex">
-
+                        @if (Auth::user()->entregador == 0)
                         <a class="btn active bg-gradient-primary mr-2" title="Editar" href="{{ route('agendas.edit', $a->id) }}"><i class="fas fa-pencil-alt"></i></a>
 
                         <form action="{{ route('agendas.destroy', $a->id) }}" method="POST">
@@ -219,8 +232,9 @@ Agenda Entrega
                             @method('DELETE')
                             <button class="btn active bg-gradient-danger mr-2" onclick="if (!confirm('Deseja realmente remover?')) { event.preventDefault(); }" title="Remover" type="submit"><i class="fas fa-trash"></i></button>
                         </form>
+                        @endif
 
-                        @if (Auth::user()->superuser == 1 )
+                        @if (Auth::user()->superuser == 1   || Auth::user()->entregador == 1)
                             <form action="{{ route('agendas.done', $a->id) }}" method="POST">
                                 @csrf
                                 @method('PUT')

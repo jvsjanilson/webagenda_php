@@ -175,9 +175,9 @@ Agenda Montagem
 
                         <div class="direct-chat-msg">
                             <div class="direct-chat-infos clearfix">
-                                <span class="direct-chat-name float-left">MONTADOR:</span>
+                                <span class="direct-chat-name float-left">Data Montagem:</span>
                                 <span class="direct-chat-timestamp float-right">
-                                    <span> <strong>{{ Str::upper($a->user->name)  }} </strong> </span>
+                                    <span><strong>{{ $a->updated_at  }} </strong> </span>
                                 </span>
                             </div>
                         </div>
@@ -210,7 +210,7 @@ Agenda Montagem
                             </form>
                         @endif
 
-                        @if ((Auth::user()->superuser == 1 || Auth::user()->montador == 1 )  && $a->entregue == 0 )
+                        @if (Auth::user()->superuser == 1 || Auth::user()->montador == 1)
                             <a  class="btn active bg-gradient-info mr-2" href="{{ route('agendamontagens.entregue', $a->id) }}"><i class="fas fa-check"></i></a>
                         @endif
 

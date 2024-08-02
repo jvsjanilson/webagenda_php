@@ -43,6 +43,11 @@ class Agenda extends Model
         return number_format($value, 2, ',', '.');
     }
 
+    public function getUpdatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format("d/m/Y H\h:i\m");
+    }
+
     //  return ($valor != "") ? (float) str_replace(',', '.', str_replace('.', '', $valor)) : 0
 
     // public function getDtAgendaAttribute($value)
