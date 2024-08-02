@@ -75,7 +75,7 @@ Agenda Montagem
                 @if ($a->entregue == 1)
                 <div class="ribbon-wrapper ">
                     <div class="ribbon bg-success">
-                        Entregue
+                        Montado
                     </div>
                 </div>
                 @endif

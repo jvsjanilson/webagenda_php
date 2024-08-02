@@ -171,12 +171,12 @@ class AgendaController extends Controller
 
         $reg = $this->model->find($id);
 
-        if (Auth::user()->superuser == 0) {
-            if ($reg->user_id != Auth::user()->id) {
-                $errors = array("error" => ['Usuário sem permissão']);
-                return redirect()->back()->withErrors($errors)->withInput();
-            }
-        }
+        // if (Auth::user()->superuser == 0) {
+        //     if ($reg->user_id != Auth::user()->id) {
+        //         $errors = array("error" => ['Usuário sem permissão']);
+        //         return redirect()->back()->withErrors($errors)->withInput();
+        //     }
+        // }
 
         return view('agenda.edit', compact('reg', 'empresas'));
     }
