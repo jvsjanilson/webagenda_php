@@ -187,6 +187,25 @@ class AgendaMontagemController extends Controller
         $data = $request->except('_token');
         $dtAgenda = $data['dt_agenda'];
         $reg = $this->model->find($id);
+
+        $limiteMontagem = Config::first()->limite_montagem;
+        $limiteDiario = Limite::where('dt_limite', $dtAgenda)
+            ->where('tipo_agenda', 'M')
+            ->count();
+
+        $countAgendaMontagemDia = $this->model
+            ->where('dt_agenda', $dtAgenda)
+            ->where('tipo', 'M')
+            ->count();
+
+        if ($countAgendaMontagemDia >= ($limiteMontagem+$limiteDiario) ) {
+            $errors = array("error" => [
+                'Limite de montagem diária foi atingido. Entre em contato com o responsável.'
+            ]);
+            return redirect()->back()->withErrors($errors)->withInput();
+        }
+
+
         $reg->update($data);
         return redirect()->route('agendamontagens.index', ['data_inicial' =>  $dtAgenda, 'data_fim'=>  $dtAgenda]);
     }
