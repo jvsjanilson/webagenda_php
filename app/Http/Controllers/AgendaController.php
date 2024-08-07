@@ -173,6 +173,7 @@ class AgendaController extends Controller
      */
     public function update(AgendaEntregaFormRequest $request, string $id)
     {
+        $reg = $this->model->find($id);
         $data = $request->except('_token');
         $dtAgenda = $data['dt_agenda'];
 
@@ -182,12 +183,13 @@ class AgendaController extends Controller
         $limiteGeral = $limiteDiario > 0 ? $limiteDiario : $limiteEntrega;
         $countAgendaEntregaDia = $this->model->where('dt_agenda', $dtAgenda)->where('tipo', 'E')->count();
 
-        if ($countAgendaEntregaDia >= ($limiteGeral) ) {
-            $errors = array("error" => ['Limite de montagem diária foi atingido. Entre em contato com o responsável.']);
-            return redirect()->back()->withErrors($errors)->withInput();
+        if ($reg->dt_agenda != $dtAgenda) {
+            if ($countAgendaEntregaDia >= ($limiteEntrega+$limiteDiario) ) {
+                $errors = array("error" => ['Limite de montagem diária foi atingido. Entre em contato com o responsável.']);
+                return redirect()->back()->withErrors($errors)->withInput();
+            }
         }
 
-        $reg = $this->model->find($id);
         $reg->update($data);
         return redirect()->route('agendas.index', ['data_inicial' =>  $dtAgenda, 'data_fim'=>  $dtAgenda]);
     }

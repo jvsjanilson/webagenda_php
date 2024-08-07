@@ -199,11 +199,14 @@ class AgendaMontagemController extends Controller
             ->where('tipo', 'M')
             ->count();
 
-        if ($countAgendaMontagemDia >= ($limiteMontagem+$limiteDiario) ) {
-            $errors = array("error" => [
-                'Limite de montagem diária foi atingido. Entre em contato com o responsável.'
-            ]);
-            return redirect()->back()->withErrors($errors)->withInput();
+        if ($reg->dt_agenda != $dtAgenda) {
+
+            if ($countAgendaMontagemDia >= ($limiteMontagem+$limiteDiario) ) {
+                $errors = array("error" => [
+                    'Limite de montagem diária foi atingido. Entre em contato com o responsável.'
+                ]);
+                return redirect()->back()->withErrors($errors)->withInput();
+            }
         }
 
 
