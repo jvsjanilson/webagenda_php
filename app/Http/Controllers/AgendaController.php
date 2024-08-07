@@ -184,7 +184,7 @@ class AgendaController extends Controller
         $countAgendaEntregaDia = $this->model->where('dt_agenda', $dtAgenda)->where('tipo', 'E')->count();
 
         if ($reg->dt_agenda != $dtAgenda) {
-            if ($countAgendaEntregaDia >= ($limiteEntrega+$limiteDiario) ) {
+            if ($countAgendaEntregaDia >= ($limiteGeral) ) {
                 $errors = array("error" => ['Limite de montagem diária foi atingido. Entre em contato com o responsável.']);
                 return redirect()->back()->withErrors($errors)->withInput();
             }
