@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use App\Models\Config;
 use App\Models\Empresa;
 use App\Models\Limite;
+use App\Models\Montador;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -243,7 +244,8 @@ class AgendaMontagemController extends Controller
     public function entregue(string $id)
     {
         $reg = $this->model->find($id);
-        return view('agenda_montagem.entrega', compact('reg'));
+        $montadores = Montador::all();
+        return view('agenda_montagem.entrega', compact('reg', 'montadores'));
     }
 
     /**
@@ -257,10 +259,15 @@ class AgendaMontagemController extends Controller
     {
         $agenda = $this->model->find($id);
 
-
         $request->validate(
                 ['fotos' => ['array', 'max:3']],
+                ['montador_nome' => [function($attribute, $value, $fail) {
+                    if (is_null($value) || empty($value) || $value == 'on' || $value == '') {
+                        $fail('O campo montador é obrigatório.');
+                    }
+                }]]
         );
+
 
         if ( count($request->only('fotos')) > 0) {
 
@@ -283,6 +290,7 @@ class AgendaMontagemController extends Controller
             if ($inc > 0) {
 
                 $agenda->entregue = true;
+                $agenda->montador_nome = $request->montador_nome;
                 $agenda->save();
             }
             return redirect()->route('agendamontagens.index', [
@@ -291,6 +299,7 @@ class AgendaMontagemController extends Controller
             ]);
         } else {
             $agenda->entregue = true;
+            $agenda->montador_nome = $request->montador_nome;
             $agenda->save();
             return redirect()->route('agendamontagens.index', [
                 'data_inicial' =>  $agenda->dt_agenda,

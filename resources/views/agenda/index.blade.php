@@ -34,7 +34,7 @@ Agenda Entrega
 
                         @if (Auth::user()->superuser == 1)
                         <div class="col-auto d-flex align-items-end form-group">
-                            <button type="button" id="btn-limite-diario" class="btn active bg-gradient-success" title=" Limite Diário"><i class="fas fa-sliders-h"></i></button>
+                            <button type="button"  data-agenda="E" id="btn-limite-diario" class="btn active bg-gradient-success" title=" Limite Diário"><i class="fas fa-sliders-h"></i></button>
                         </div>
                         @endif
 

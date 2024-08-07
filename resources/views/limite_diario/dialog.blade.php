@@ -118,13 +118,8 @@
             <div class="modal-footer" style="padding: 0px">
                 <div class="form-row">
                     <div class="col-12 col-md-12">
-
-
-
-                        <button type="button"
-                        id="btn-fechar-filtro"
-                        class="btn active bg-gradient-secondary"
-                        data-dismiss="modal">FECHAR</button>
+                        <button type="button" id="btn-fechar-filtro" class="btn active bg-gradient-secondary"
+                            data-dismiss="modal">FECHAR</button>
                         </div>
                     </div>
                 </div>

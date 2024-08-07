@@ -33,7 +33,7 @@ Agenda Montagem
 
                         @if (Auth::user()->superuser == 1)
                         <div class="col-auto d-flex align-items-end form-group">
-                            <button type="button" id="btn-limite-diario" class="btn active bg-gradient-success" title=" Limite Diário"><i class="fas fa-sliders-h"></i></button>
+                            <button type="button" data-agenda="M" id="btn-limite-diario" class="btn active bg-gradient-success" title=" Limite Diário"><i class="fas fa-sliders-h"></i></button>
                         </div>
                         @endif
                         <div class="col-auto d-flex align-items-end form-group">
@@ -205,6 +205,17 @@ Agenda Montagem
                                 </span>
                             </div>
                         </div>
+
+                        @if ( $a->entregue == 1)
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-left">
+                                MONTADOR POR:
+                                </span>
+                                <span class="direct-chat-name float-right">{{ Str::upper($a->montador_nome) }}</span>
+                            </div>
+                        </div>
+                        @endif
 
                     </div>
                 </div>

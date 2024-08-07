@@ -17,11 +17,19 @@ $(".valor").maskMoney({
 
 
 $("#btn-limite-diario, #btn-filtrar").on('click',  function (){
+
     loadLimites();
 });
 
 $("#btn-fechar-filtro, #btn-close").on('click', function(){
     $("#modal-limite-diario").hide();
+    if ($("#btn-limite-diario").data('agenda') == 'M') {
+        window.location.href = '/agendamontagens';
+    } else {
+        window.location.href = '/agendas';
+    }
+
+
 });
 
 function adicionarLimite()
@@ -116,6 +124,7 @@ function loadLimites() {
             $('#modal-limite-diario').show();
             $("#btn-limite-diario").attr('disabled', false);
             $("#btn-filtrar").attr('disabled', false);
+
           //  Swal.close()
         }
     })

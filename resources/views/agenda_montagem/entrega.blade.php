@@ -60,7 +60,7 @@ Agenda Monagem
                                 <div class="form-row">
                                     <div class="col-md-auto">
                                         <button  type="button" id="openFileDialog" class="btn btn-primary mb-3"><i class="fas fa-camera"> Tirar Foto </i></button>
-                                        <p id="message"></p>
+
                                     </div>
                                     <div class="col-md-auto">
                                         @error('fotos')
@@ -70,6 +70,29 @@ Agenda Monagem
                                         @enderror
 
                                     </div>
+                                    <div class="col-md-auto">
+                                        <div class="row">
+
+                                            @foreach ($montadores as $m)
+
+                                            <div class="form-check  form-check-inline">
+                                                <input {{ $m->id == 1 ? 'checked' : '' }} onclick="show(this)" class="form-check-input" type="radio" name="montador_nome" id="flexRadioDefault{{ $m->id }}" value="{{ $m->nome }}">
+                                                <label class="form-check-label" for="flexRadioDefault{{ $m->id }}">
+                                                    {{ $m->nome }}
+                                                </label>
+                                            </div>
+
+                                            @endforeach
+                                            <div class="form-check  form-check-inline">
+                                                <input class="form-check-input" onclick="show(this)" type="radio" name="montador_nome" id="montador_999" >
+                                                <label class="form-check-label" for="montador_999">
+                                                    OUTRO
+                                                </label>
+                                                <input class="form-control form-control-sm ml-1" type="hidden" id="montador_nome_change" onkeyup="changeOutro(this)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="text-danger ml-1 font-weight-bolder" id="message"></span>
                                 </div>
 
                                 <input type="file" id="fileInput" accept="image/*" capture="camera" style="display: none;">
@@ -98,11 +121,36 @@ Agenda Monagem
         $('#btn-submit').attr('disabled', false);
     })
 
+    function show(e) {
+        const lista = ['UBIRAJARA', 'GARCIA']
+        if (lista.includes($(e).val())) {
+            $('#montador_nome_change').attr('type', 'hidden');
+            $('#montador_nome_change').val('');
+            $('#montador_999').val('')
+        } else {
+
+            $('#montador_nome_change').attr('type', 'text');
+            $('#montador_nome_change').attr('maxlength', '60');
+        }
+
+    }
+    function changeOutro(e) {
+
+        $('#montador_999').val($(e).val())
+    }
     document.getElementById('imageForm').addEventListener('submit', function(event) {
 
         const fileInput = document.getElementById('fileInput');
         const file = fileInput.files[0];
         const message = document.getElementById('message');
+
+        if ($("#montador_999").prop('checked')) {
+            if ($('#montador_nome_change').val() == '') {
+                message.textContent = 'Por favor, informe o nome do montador.';
+                event.preventDefault();
+                return;
+            }
+        }
 
         if (file) {
             // Verifica se o arquivo é uma imagem

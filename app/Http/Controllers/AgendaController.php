@@ -114,11 +114,15 @@ class AgendaController extends Controller
         $data = $request->except('_token');
         $data['tipo'] = 'E';
         $dtAgenda = $data['dt_agenda'];
+
         $limiteEntrega = Config::first()->limite_entrega;
         $limiteDiario = Limite::where('dt_limite', $dtAgenda)->where('tipo_agenda', 'E')->count();
+
+        $limiteGeral = $limiteDiario > 0 ? $limiteDiario : $limiteEntrega;
+
         $countAgendaEntregaDia = $this->model->where('dt_agenda', $dtAgenda)->where('tipo', 'E')->count();
 
-        if ($countAgendaEntregaDia >= ($limiteEntrega+$limiteDiario) ) {
+        if ($countAgendaEntregaDia >= ($limiteGeral) ) {
             $errors = array("error" => ['Limite de montagem diária foi atingido. Entre em contato com o responsável.']);
             return redirect()->back()->withErrors($errors)->withInput();
         }
@@ -174,12 +178,15 @@ class AgendaController extends Controller
 
         $limiteEntrega = Config::first()->limite_entrega;
         $limiteDiario = Limite::where('dt_limite', $dtAgenda)->where('tipo_agenda', 'E')->count();
+
+        $limiteGeral = $limiteDiario > 0 ? $limiteDiario : $limiteEntrega;
         $countAgendaEntregaDia = $this->model->where('dt_agenda', $dtAgenda)->where('tipo', 'E')->count();
 
-        if ($countAgendaEntregaDia >= ($limiteEntrega+$limiteDiario) ) {
+        if ($countAgendaEntregaDia >= ($limiteGeral) ) {
             $errors = array("error" => ['Limite de montagem diária foi atingido. Entre em contato com o responsável.']);
             return redirect()->back()->withErrors($errors)->withInput();
         }
+
         $reg = $this->model->find($id);
         $reg->update($data);
         return redirect()->route('agendas.index', ['data_inicial' =>  $dtAgenda, 'data_fim'=>  $dtAgenda]);
