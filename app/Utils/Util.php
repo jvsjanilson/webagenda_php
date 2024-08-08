@@ -2,6 +2,10 @@
 
 namespace App\Utils;
 
+use App\Models\Limite;
+use App\Models\Config;
+use Carbon\Carbon;
+
 
 abstract class Util
 {
@@ -86,4 +90,36 @@ abstract class Util
     {
         return ($value != "") ? date($format,  strtotime(str_replace('/', '-', $value))) : date('Y-m-d');
     }
+
+    public static function getIntervaloDatas($dataInicial, $dataFinal) : array
+    {
+        $intervalo = [];
+        $dataInicial = Carbon::parse($dataInicial);
+        $dataFinal = Carbon::parse($dataFinal);
+        while ($dataInicial <= $dataFinal) {
+            $intervalo[] = $dataInicial->toDateString();
+            $dataInicial->addDay();
+        }
+
+        return $intervalo;
+    }
+
+    public static function getLimiteEntrega($dataInicial, $dataFinal = null, $tipoAgenda = 'E') : int
+    {
+        if (is_null($dataFinal)) {
+            $dataFinal = $dataInicial;
+        }
+
+        $totalLimite = 0;
+        foreach (Util::getIntervaloDatas($dataInicial, $dataFinal) as $data) {
+            if ( Limite::where('dt_limite', $data)->where('tipo_agenda', $tipoAgenda)->exists() ) {
+                $totalLimite += Limite::where('dt_limite', $data)->where('tipo_agenda', $tipoAgenda)->first()->limite;
+            } else {
+                $totalLimite += $tipoAgenda == 'E' ? Config::first()->limite_entrega : Config::first()->limite_montagem;
+            }
+        }
+        return $totalLimite;
+    }
+
 }
+

@@ -9,9 +9,11 @@ use App\Models\AgendaFoto;
 use App\Models\Config;
 use App\Models\Limite;
 use App\Models\Empresa;
+use App\Utils\Util;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Psy\CodeCleaner\AssignThisVariablePass;
 
 class AgendaController extends Controller
 {
@@ -23,16 +25,15 @@ class AgendaController extends Controller
 
     }
 
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
         $q = $request->all();
-
         $dtInicial = null;
         $dtFim = null;
-        $limiteGeral = Config::first()->limite_entrega;
 
         if (count($q) > 0 && !is_null($q['data_inicial']) && !is_null($q['data_fim']))
         {
@@ -66,20 +67,7 @@ class AgendaController extends Controller
                 ->get();
         }
 
-        $diff = Carbon::parse($dtInicial)->diffInDays(Carbon::parse($dtFim));
-        if ($diff >= 1.0) {
-            $limiteGeral += ($diff * Config::first()->limite_entrega);
-        }
-
-        $limiteTotal = Limite::when($dtInicial == $dtFim, function($q) use ($dtFim){
-            $q->where('dt_limite', $dtFim);
-        })
-        ->when($dtInicial != $dtFim, function($q) use ($dtInicial, $dtFim) {
-            $q->whereBetween('dt_limite', [$dtInicial, $dtFim]);
-        })
-        ->where('tipo_agenda', 'E')
-        ->sum('limite') + $limiteGeral;
-
+        $limiteTotal = Util::getLimiteEntrega($dtInicial, $dtFim );
         $totalUsado = $this->model
         ->where('tipo', 'E')
         ->when($dtInicial == $dtFim, function($q) use ($dtFim){
@@ -88,6 +76,7 @@ class AgendaController extends Controller
         ->when($dtInicial != $dtFim, function($q) use ($dtInicial, $dtFim){
             $q->whereBetween('dt_agenda', [$dtInicial, $dtFim]);
         })->count();
+
         return view('agenda.index', compact('agendas', 'dtInicial', 'dtFim', 'limiteTotal', 'totalUsado'));
 
     }
@@ -114,12 +103,7 @@ class AgendaController extends Controller
         $data = $request->except('_token');
         $data['tipo'] = 'E';
         $dtAgenda = $data['dt_agenda'];
-
-        $limiteEntrega = Config::first()->limite_entrega;
-        $limiteDiario = Limite::where('dt_limite', $dtAgenda)->where('tipo_agenda', 'E')->count();
-
-        $limiteGeral = $limiteDiario > 0 ? $limiteDiario : $limiteEntrega;
-
+        $limiteGeral =  Util::getLimiteEntrega($data['dt_agenda']);
         $countAgendaEntregaDia = $this->model->where('dt_agenda', $dtAgenda)->where('tipo', 'E')->count();
 
         if ($countAgendaEntregaDia >= ($limiteGeral) ) {
@@ -176,11 +160,7 @@ class AgendaController extends Controller
         $reg = $this->model->find($id);
         $data = $request->except('_token');
         $dtAgenda = $data['dt_agenda'];
-
-        $limiteEntrega = Config::first()->limite_entrega;
-        $limiteDiario = Limite::where('dt_limite', $dtAgenda)->where('tipo_agenda', 'E')->count();
-
-        $limiteGeral = $limiteDiario > 0 ? $limiteDiario : $limiteEntrega;
+        $limiteGeral =  Util::getLimiteEntrega($data['dt_agenda']);
         $countAgendaEntregaDia = $this->model->where('dt_agenda', $dtAgenda)->where('tipo', 'E')->count();
 
         if ($reg->dt_agenda != $dtAgenda) {

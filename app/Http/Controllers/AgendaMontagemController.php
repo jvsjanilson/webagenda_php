@@ -11,6 +11,7 @@ use App\Models\Config;
 use App\Models\Empresa;
 use App\Models\Limite;
 use App\Models\Montador;
+use App\Utils\Util;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -65,20 +66,7 @@ class AgendaMontagemController extends Controller
                 ->orderBy('entregue')
                 ->get();
         }
-
-        $diff = Carbon::parse($dtInicial)->diffInDays(Carbon::parse($dtFim));
-        if ($diff >= 1.0) {
-            $limiteGeral += ($diff * Config::first()->limite_montagem);
-        }
-
-        $limiteTotal = Limite::when($dtInicial == $dtFim, function($q) use ($dtFim){
-            $q->where('dt_limite', $dtFim);
-        })
-        ->when($dtInicial != $dtFim, function($q) use ($dtInicial, $dtFim) {
-            $q->whereBetween('dt_limite', [$dtInicial, $dtFim]);
-        })
-        ->where('tipo_agenda', 'M')
-        ->sum('limite') + $limiteGeral;
+        $limiteTotal = Util::getLimiteEntrega($dtInicial, $dtFim, 'M');
 
 
         $totalUsado = $this->model
@@ -119,17 +107,19 @@ class AgendaMontagemController extends Controller
         $data['tipo'] = 'M';
         $dtAgenda = $data['dt_agenda'];
 
-        $limiteMontagem = Config::first()->limite_montagem;
-        $limiteDiario = Limite::where('dt_limite', $dtAgenda)
-            ->where('tipo_agenda', 'M')
-            ->count();
+        // $limiteMontagem = Config::first()->limite_montagem;
+        // $limiteDiario = Limite::where('dt_limite', $dtAgenda)
+        //     ->where('tipo_agenda', 'M')
+        //     ->count();
+
+        $limiteGeral =  Util::getLimiteEntrega($data['dt_agenda'], null, 'M');
 
         $countAgendaMontagemDia = $this->model
             ->where('dt_agenda', $dtAgenda)
             ->where('tipo', 'M')
             ->count();
 
-        if ($countAgendaMontagemDia >= ($limiteMontagem+$limiteDiario) ) {
+        if ($countAgendaMontagemDia >= ($limiteGeral) ) {
             $errors = array("error" => [
                 'Limite de montagem diária foi atingido. Entre em contato com o responsável.'
             ]);
@@ -189,10 +179,7 @@ class AgendaMontagemController extends Controller
         $dtAgenda = $data['dt_agenda'];
         $reg = $this->model->find($id);
 
-        $limiteMontagem = Config::first()->limite_montagem;
-        $limiteDiario = Limite::where('dt_limite', $dtAgenda)
-            ->where('tipo_agenda', 'M')
-            ->count();
+        $limiteGeral =  Util::getLimiteEntrega($data['dt_agenda'], null, 'M');
 
         $countAgendaMontagemDia = $this->model
             ->where('dt_agenda', $dtAgenda)
@@ -201,14 +188,13 @@ class AgendaMontagemController extends Controller
 
         if ($reg->dt_agenda != $dtAgenda) {
 
-            if ($countAgendaMontagemDia >= ($limiteMontagem+$limiteDiario) ) {
+            if ($countAgendaMontagemDia >= ($limiteGeral) ) {
                 $errors = array("error" => [
                     'Limite de montagem diária foi atingido. Entre em contato com o responsável.'
                 ]);
                 return redirect()->back()->withErrors($errors)->withInput();
             }
         }
-
 
         $reg->update($data);
         return redirect()->route('agendamontagens.index', ['data_inicial' =>  $dtAgenda, 'data_fim'=>  $dtAgenda]);

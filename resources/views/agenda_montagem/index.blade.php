@@ -10,7 +10,7 @@ Agenda Montagem
 
         <form action="{{ route('agendamontagens.index') }}">
             <div class="form-row">
-                <div class="col-md-6">
+                <div class="col-md-9">
                     <div class="form-row">
 
                         <div class="col-auto  form-group">
@@ -38,9 +38,10 @@ Agenda Montagem
                         @endif
                         <div class="col-auto d-flex align-items-end form-group">
                             <strong class="pr-1">Limite do dia: </strong>
-                            <span title="Limites" id="span-limite" class="badge bg-primary">
+                            <span title="Limites" id="span-limite" class="mb-1 badge bg-primary">
                                 {{ $totalUsado . '/' . $limiteTotal }}
                             </span>
+                            <strong class="pl-1 text-danger">Obs: O total do limite depende do filtro das datas </strong>
                         </div>
 
                     </div>
